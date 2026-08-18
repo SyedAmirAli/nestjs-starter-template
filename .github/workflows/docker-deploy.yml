@@ -1,0 +1,161 @@
+name: Build, push & deploy (docker)
+
+# The image is built straight from the Dockerfile. docker-compose.yml is committed here but
+# is NOT what the server runs — the server keeps its own copy at DEPLOY_COMPOSE_FILE next to
+# the .env holding the real secrets, and the deploy step recreates the container from that.
+on:
+    push:
+        branches:
+            - main
+            - master
+    workflow_dispatch:
+
+env:
+    IMAGE: ghcr.io/syedamirali/glowquest-backend
+    DEPLOY_COMPOSE_FILE: /srv/projects/glowquest-backend/docker-compose.yml
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    # Gate the image on the code being valid. Building a container from code that does not
+    # typecheck just moves the failure to production.
+    verify:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v5
+
+            - name: Set up Node
+              uses: actions/setup-node@v5
+              with:
+                  node-version: 26
+                  cache: yarn
+
+            - name: Install
+              run: yarn install --frozen-lockfile
+
+            # The Prisma client is generated code that the rest of the source imports, so it
+            # must exist before anything typechecks. `prisma generate` reads the schema only
+            # and never connects, but prisma.config.ts requires DATABASE_URL to be *set*.
+            - name: Generate Prisma client
+              run: yarn db:gen
+              env:
+                  DATABASE_URL: postgresql://user:password@127.0.0.1:5432/db?schema=public
+
+            - name: Lint
+              run: yarn lint
+
+            - name: Test
+              run: yarn test --passWithNoTests
+
+            - name: Build
+              run: yarn build
+
+    build-and-push:
+        needs: verify
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v5
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Log in to GHCR
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: ./Dockerfile
+                  push: true
+                  # :latest is what the server pulls; the sha tag is what makes a rollback
+                  # possible without a rebuild.
+                  tags: |
+                      ${{ env.IMAGE }}:latest
+                      ${{ env.IMAGE }}:${{ github.sha }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+
+    deploy:
+        needs: build-and-push
+        runs-on: ubuntu-latest
+        # Opt-in, because a deploy needs a server that exists. Without this the job fails on
+        # every push until one does, and a permanently red pipeline is a pipeline nobody
+        # reads. Secrets cannot be tested in a job-level `if`, hence a repository variable:
+        #
+        #   gh variable set DEPLOY_ENABLED --body true
+        #   gh secret set SSH_HOST / SSH_USER / SSH_PRIVATE_KEY   (and SSH_PORT if not 22)
+        #
+        # The image is pushed to GHCR either way, so a manual `docker compose pull && up -d`
+        # on the server is always available in the meantime.
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+        steps:
+            - name: Pull image on server & restart
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: ${{ secrets.SSH_PORT || '22' }}
+                  script: |
+                      set -e
+                      IMAGE="${{ env.IMAGE }}:latest"
+                      COMPOSE_FILE="${{ env.DEPLOY_COMPOSE_FILE }}"
+
+                      # 1. authenticate to the registry
+                      echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+                      # 2. pull the freshly built image. GHCR blob storage returns transient
+                      #    503s often enough that a single failure is not evidence of a bad
+                      #    image, so back off and retry before failing the deploy.
+                      for i in 1 2 3 4 5; do
+                        if docker pull "$IMAGE"; then
+                          break
+                        fi
+                        if [ "$i" -eq 5 ]; then
+                          echo "docker pull failed after 5 attempts"
+                          exit 1
+                        fi
+                        echo "docker pull failed (attempt $i/5), retrying in $((i * 10))s..."
+                        sleep $((i * 10))
+                      done
+
+                      # 3. apply any pending schema migrations BEFORE the new code starts.
+                      #    Never at app boot: several containers booting at once would race
+                      #    the same migration, and a failed migration would crash-loop the
+                      #    API instead of failing one visible deploy step.
+                      docker compose -f "$COMPOSE_FILE" run --rm --no-deps app \
+                        npx prisma migrate deploy
+
+                      # 4. recreate the running container from the server's compose file
+                      docker compose -f "$COMPOSE_FILE" up -d
+
+                      # 5. wait for the container to report healthy, so a broken deploy fails
+                      #    here rather than silently serving 502s.
+                      for i in $(seq 1 30); do
+                        status=$(docker inspect --format '{{.State.Health.Status}}' glowquest-backend 2>/dev/null || echo starting)
+                        if [ "$status" = "healthy" ]; then
+                          echo "container healthy"
+                          break
+                        fi
+                        if [ "$i" -eq 30 ]; then
+                          echo "container did not become healthy in time"
+                          docker logs --tail 100 glowquest-backend
+                          exit 1
+                        fi
+                        sleep 5
+                      done
+
+                      # 6. clean up now-dangling old image layers
+                      docker image prune -f
+
+                      # 7. log out
+                      docker logout ghcr.io

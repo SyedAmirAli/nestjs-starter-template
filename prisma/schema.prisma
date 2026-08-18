@@ -1,0 +1,348 @@
+// glowquest — foundation schema.
+//
+// Scope: exactly what the inherited modules need to run — auth (Better Auth's four tables),
+// account settings, the file lifecycle, the audit trail, and the AI cost ledger. Feature
+// tables (profile, resumes, applications, assistant) are added by their own plans in
+// claude-plans/; nothing here presumes their shape.
+//
+// Conventions, applied without exception:
+//   - UUIDv7 primary keys on everything we own. Time-ordered, so they index well and sort
+//     chronologically without a separate column. The Better Auth tables are the exception —
+//     that library generates its own ids and we do not get to choose the format.
+//   - snake_case table names via @@map; camelCase in the client.
+//   - Every user-owned row cascades from User. Account deletion is then one DELETE.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// Auth — Better Auth owns the shape of these four tables.
+// ============================================================================
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole  @default(USER)
+  isActive      Boolean   @default(true)
+  /// Soft delete, set by an admin action. Excluded from listings and blocked at session
+  /// creation, but the row and its relations stay intact so recovery is trivial. Distinct
+  /// from self-service deletion, which is a hard delete (see AccountDeletionService).
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+  meta     UserMeta?
+
+  files      File[]
+  fileAccess FileAccessLog[]
+  modelCalls ModelCall[]
+
+  @@unique([email])
+  @@index([isActive])
+  @@index([deletedAt])
+  @@map("user")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  ipAddress String?
+  userAgent String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@index([isActive])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  /// Granted OAuth scopes. Load-bearing for the Gmail integration: sign-in asks only for
+  /// `openid email profile`, and `gmail.compose` is requested incrementally the first time
+  /// the user creates a draft — so this is how we know which of the two we currently hold.
+  scope                 String?
+  password              String?
+  isActive              Boolean   @default(true)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([providerId, accountId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@index([expiresAt])
+  @@map("verification")
+}
+
+// ============================================================================
+// Account settings
+// ============================================================================
+
+/// Account-level preferences, seeded at sign-up by the auth `user.create.after` hook.
+///
+/// Deliberately small: this is *preference*, not profile content. A headline, location or
+/// links belong to the profile module's own versioned tables — putting them here would give
+/// the same field two homes and two update paths.
+model UserMeta {
+  id String @id @db.Uuid
+
+  theme  Theme   @default(SYSTEM)
+  locale String? @default("en")
+  /// IANA timezone. The one time value the server stores rather than leaving to the client,
+  /// because backup schedules and notification delivery windows are computed server-side.
+  timezone String?
+  /// Default PDF page size for rendered résumés. Derived from the profile's country on first
+  /// render when unset; A4 otherwise.
+  pageSize String? @default("A4")
+
+  marketingEmails    Boolean @default(false)
+  notificationEmails Boolean @default(true)
+
+  onboardingCompletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_meta")
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+// ============================================================================
+// Files — object storage lifecycle
+// ============================================================================
+
+enum FileKind {
+  RESUME_UPLOAD
+  JD_UPLOAD
+  RESUME_PDF
+  LETTER_PDF
+  AVATAR
+  BACKUP_ARCHIVE
+  DATA_EXPORT
+}
+
+/// PENDING → READY → PURGED. Nothing downstream may reference a file that is not READY:
+/// a PENDING row means a presigned URL was issued and we have not yet verified that the
+/// bytes which arrived are the bytes that were promised.
+enum FileStatus {
+  PENDING
+  READY
+  PURGED
+}
+
+model File {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  kind   FileKind
+  status FileStatus @default(PENDING)
+
+  /// Full object key including the app prefix, e.g. `glowquest/users/<userId>/uploads/<uuid>.pdf`.
+  storageKey   String  @unique
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  /// Computed at `complete` from the stored object, not from the client. Enables dedupe of
+  /// a CV re-uploaded unchanged, and is the only thing that proves the object we verified is
+  /// the object we later read.
+  checksumSha256 String?
+
+  /// Set for kinds with a retention window (uploads, exports, archives). Null means "lives
+  /// as long as the record that owns it". The purge job reads this column, not S3 lifecycle
+  /// rules — a bucket rule cannot delete the row, and a row without its object is a 404 the
+  /// user cannot explain.
+  expiresAt DateTime?
+  purgedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessLogs FileAccessLog[]
+
+  @@index([userId, kind, status])
+  @@index([status, expiresAt])
+  @@index([checksumSha256])
+  @@map("files")
+}
+
+/// One row per issued download URL. A signed URL is a bearer token, so "who asked for a
+/// link to this object, and when" is the only record of who could have read it — needed for
+/// the backup and export audit trail.
+model FileAccessLog {
+  id     String   @id @default(uuid(7)) @db.Uuid
+  fileId String   @db.Uuid
+  userId String
+  ip     String?
+  at     DateTime @default(now())
+
+  file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([fileId, at])
+  @@index([userId, at])
+  @@map("file_access_logs")
+}
+
+// ============================================================================
+// Audit trail
+// ============================================================================
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  STATUS_CHANGE
+  LOGIN
+  LOGOUT
+  EXPORT
+  PURGE
+  OTHER
+}
+
+/// Human/admin action trail. `actorId` is deliberately a plain String with no FK: history
+/// must survive the actor. `actorEmail` is denormalized for the same reason — after a user
+/// is deleted, "who did this" has to remain answerable.
+model AuditLog {
+  id         String      @id @default(uuid(7)) @db.Uuid
+  actorId    String?
+  actorEmail String?
+  action     AuditAction
+  resource   String
+  resourceId String?
+  summary    String?
+  beforeJson Json?
+  afterJson  Json?
+  metaJson   Json?
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([resource, resourceId])
+  @@index([action, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// AI cost ledger
+// ============================================================================
+
+enum ModelCallFeature {
+  RESUME_PARSE
+  RESUME_ANALYSIS
+  JD_PARSE
+  MATCH_ANALYSIS
+  TAILORING
+  COVER_LETTER
+  EMAIL_DRAFT
+  FIELD_REWRITE
+  ASSISTANT_CHAT
+  OTHER
+}
+
+enum ModelCallOperation {
+  MESSAGE
+  STRUCTURED
+  STREAM
+  EMBED
+  RERANK
+}
+
+/// One row per AI-provider call, success or failure.
+///
+/// `userId` is a required FK, unlike AuditLog.actorId: every AI call originates from an
+/// authenticated user action, and this table enforces spend limits rather than merely
+/// recording them — referential integrity and cheap per-user sums both matter.
+///
+/// Spend for any window is computed ON DEMAND by summing `costMicroUsd` here. It is never
+/// denormalized onto a running counter, which drifts the first time a job is retried.
+model ModelCall {
+  id     String @id @default(uuid(7)) @db.Uuid
+  userId String
+
+  feature   ModelCallFeature
+  operation ModelCallOperation
+  model     String
+
+  /// The resource that occasioned the call — a resume id, an application id. Untyped on
+  /// purpose: this table must not gain a nullable FK per feature as features are added.
+  subjectId String? @db.Uuid
+
+  promptTokens     Int?
+  completionTokens Int?
+  totalTokens      Int?
+  /// Micro-dollars (1e-6 USD). An integer, because a single call can cost $0.0004 and a
+  /// float accumulates visible drift over a month of sums.
+  costMicroUsd     Int?
+
+  latencyMs Int
+  ok        Boolean
+  errorText String?
+  metaJson  Json?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, feature, createdAt])
+  @@index([createdAt])
+  @@index([subjectId])
+  @@map("model_calls")
+}

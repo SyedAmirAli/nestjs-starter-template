@@ -1,0 +1,63 @@
+# glowquest API — single-container deploy.
+#
+# Postgres and Redis are existing services on the host, not containers here. Only two values
+# genuinely differ inside a container, and they are the two set explicitly below.
+#
+# Unlike the file this was ported from, nothing secret is inlined: every value comes from the
+# .env file sitting next to this compose file, which Compose substitutes at `up` / `config`
+# time. That is what makes this file safe to commit — edit .env, never this.
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: ghcr.io/syedamirali/glowquest-backend:latest
+        container_name: glowquest-backend
+        restart: unless-stopped
+        ports:
+            - '${PORT:-4000}:4000'
+        extra_hosts:
+            # Lets the container resolve host.docker.internal on Linux too — Docker Desktop
+            # on macOS/Windows provides this already. Postgres and Redis both run on the
+            # host itself (see below), so without this the container cannot reach either.
+            - 'host.docker.internal:host-gateway'
+
+        # Everything not overridden below is read straight from .env.
+        env_file:
+            - .env
+
+        environment:
+            NODE_ENV: production
+
+            # DATABASE_URL and REDIS_HOST are deliberately NOT taken from .env: both name
+            # "localhost", which inside a container resolves to the container itself rather
+            # than the host. .env correctly keeps "localhost" for host-based development, so
+            # the container-specific value is set here instead — reassembled from the
+            # decomposed DATABASE_* parts, which .env does supply.
+            DATABASE_HOST: host.docker.internal
+            DATABASE_URL: 'postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@host.docker.internal:${DATABASE_PORT:-5432}/${DATABASE_NAME}?schema=public'
+            REDIS_HOST: host.docker.internal
+            REDIS_URL: ''
+
+            # This compose file runs a single container with no separate worker deployment,
+            # so the BullMQ workers must run in-process. NODE_ENV=production would otherwise
+            # default this to false and silently stop every queued job from being consumed —
+            # jobs would enqueue successfully and never run, which looks like a hang, not an
+            # error.
+            RUN_WORKERS_IN_PROCESS: 'true'
+
+        healthcheck:
+            test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://127.0.0.1:4000/health']
+            interval: 30s
+            timeout: 5s
+            start_period: 20s
+            retries: 3
+
+        logging:
+            # Without a cap the access log fills the host disk over months, and a full disk
+            # takes Postgres down with it.
+            driver: json-file
+            options:
+                max-size: '10m'
+                max-file: '5'

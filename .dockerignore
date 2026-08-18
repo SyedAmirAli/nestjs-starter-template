@@ -1,0 +1,41 @@
+# Dependencies and build output — rebuilt inside the image
+node_modules
+web/node_modules
+dist
+web/dist
+
+# Secrets — real values are injected at container runtime via docker-compose,
+# never baked into the image
+.env
+.env.*
+!.env.example
+!web/.env.example
+
+# VCS / editors / agent tooling
+.git
+.gitignore
+.vscode
+.idea
+.cursor
+.claude
+.agents
+
+# Logs, backups, local data, coverage
+logs
+*.log
+backups
+.data
+coverage
+.nyc_output
+
+# Docs and misc project files not needed at runtime
+docs
+*.md
+.well-known
+skills-lock.json
+ui-registry.md
+
+# Docker files themselves
+Dockerfile
+docker-compose.yml
+.dockerignore
