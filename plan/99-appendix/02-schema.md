@@ -3,6 +3,13 @@
 Every model this plan adds or changes, in one place. Existing models are shown only where
 they change.
 
+> **Phase 08 amends this appendix.** See
+> [08-difficulty/01](../08-difficulty/01-constraint-config.md) and
+> [03](../08-difficulty/03-power-architecture.md) for `DifficultyPreset`, `Level`'s
+> constraint columns, `PowerDefinition`, `PowerInventory`, `LedgerEntry.power`, and `Run`'s
+> attempt fields. The one **replacement** rather than addition: `Wallet.powers` is dropped in
+> favour of typed `PowerInventory` rows.
+
 Conventions carried from the current schema without exception: UUIDv7 primary keys on
 everything we own, `snake_case` `@@map`, and **every user-owned row cascades from `User`**
 so account deletion stays a single `DELETE`.

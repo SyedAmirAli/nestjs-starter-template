@@ -167,9 +167,13 @@ Clamping rather than rejecting is deliberate. The player already saw the hint; t
 level back is a worse outcome than letting a rare desync cost the house three Powers. The
 flag is what makes a *systematic* desync visible.
 
-There is a single Powers pool, not three. The catalog sells bundles named "Hint ×5", but
-`Powers` is one integer — the client chooses how to spend it. This is simpler than three
-balances and matches `wallet.powers` in the existing SQLite schema.
+> **Superseded by [08-difficulty/03](../08-difficulty/03-power-architecture.md).** This
+> section originally specified a **single integer Powers pool**, with "Hint ×5" granting five
+> generic Powers. That was defensible with three interchangeable helpers; it is not once time
+> and recovery powers exist, because a pool cannot express "you have 4 Powers but none of
+> them are usable on this level". `Wallet.powers` is replaced by a typed `PowerInventory`
+> table. Everything else in this document — the ledger, the milestone settlement rule, the
+> optimistic-spend reasoning, the reconcile job — holds unchanged, applied **per power type**.
 
 ## Endpoints
 

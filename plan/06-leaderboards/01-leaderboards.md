@@ -93,6 +93,12 @@ A player appears on a board only if **all** of these hold:
 | `isActive`, not deleted    | Suspended accounts vanish from rankings.                                     |
 | No unresolved run flags    | A flagged run's score is excluded pending review ([07-platform/02](../07-platform/02-anti-cheat.md)). |
 
+Separately, a run with `usedPurchasedAid` contributes **no score to any board**
+([08-difficulty/03](../08-difficulty/03-power-architecture.md)). It still pays XP, points,
+stars and progression in full — only rank is protected. This is what keeps "points cannot
+buy score" true once purchasable time and recovery powers exist, since those convert a
+failed attempt into a completed one.
+
 Ineligible players still get a full read of the board — this is exactly the moment to
 explain what signing in is for. The response carries `you.eligible: false` with a `reason`,
 and the app renders "Sign in to join the leaderboard" in the pinned row where the rank would

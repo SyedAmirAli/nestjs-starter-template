@@ -82,8 +82,10 @@ optimistically.
 Powers effectively unlimited. Replace with the wallet balance, spent optimistically and
 reconciled at run submission (see [04-economy/01](../04-economy/01-wallet.md)).
 
-Note the server keeps **one Powers pool**, not three. The board decides which kind of help
-each Power buys.
+Powers are **typed** per [08-difficulty/03](../08-difficulty/03-power-architecture.md) —
+separate balances per power, so a time power can be hidden on an untimed level. The full
+client-side specification for this lives in the mobile repo at
+`.cursor/plans/TIMER_HEARTS_POWERS_IMPLEMENTATION.plan.md`.
 
 ### Screens — mock removal
 

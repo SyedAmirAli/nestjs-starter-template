@@ -118,9 +118,9 @@ player-specific fields layered on after the cache read — never cache a balance
 Seed the catalog from `mock.shopPowers` so nothing visibly changes at launch: Hint ×5 / 250,
 Reveal ×3 / 400, Shuffle ×10 / 180, All ×5 / 690 (best).
 
-Note the single Powers pool from [04.1](01-wallet.md): "Hint ×5" grants 5 Powers, not 5
-hint-specific charges. If per-type Powers are ever wanted, that is a v2 schema change to
-`grants` and a client change — the wire format already carries a JSON grant.
+`grants` is a **typed** map per [08-difficulty/03](../08-difficulty/03-power-architecture.md):
+`{ "HINT": 5 }`, `{ "ADD_TIME": 3 }`. The earlier single-pool design is superseded, which is
+what stops the shop's own labels from lying — "Hint ×5" now grants five hints.
 
 ### `POST /v1/shop/purchase`
 

@@ -43,6 +43,7 @@ only on the phases above it.
 | **[05 · Retention](05-retention/)**         | Daily activity, streaks, freezes, daily goal, the weekly chart, daily quests. | 03         |
 | **[06 · Leaderboards](06-leaderboards/)**   | Country and global boards, weekly and all-time, with the player's own rank.   | 03, 04     |
 | **[07 · Platform](07-platform/)**           | Scheduled jobs, anti-cheat and observability, testing and rollout.            | all        |
+| **[08 · Difficulty](08-difficulty/)**       | Timers, hearts, difficulty presets, typed powers, the attempt lifecycle.     | 02, 03, 04 |
 
 ## Appendices
 
@@ -63,10 +64,11 @@ These hold in every phase and are not restated per plan.
    module, `src/modules/game/rewards/`, mirroring `mobile-app/src/game/rewards.ts`.
 3. **Everything a client can retry must be idempotent.** Every mutation that moves the
    economy carries a client-generated `clientRunId`/`idempotencyKey`, unique per user.
-4. **Score is never spendable.** The mobile app's economy is deliberately split: score is
-   the competitive stat and is never spent; Powers come from milestones; points are the
-   only soft currency. The server preserves that split — nothing may convert score into
-   anything else.
+4. **Score is never spendable, and nothing purchasable may move a rank.** The mobile app's
+   economy is deliberately split: score is the competitive stat and is never spent; Powers
+   come from milestones; points are the only soft currency. The server preserves that split.
+   Phase 08 extends it: an attempt rescued by a *purchased* time or recovery power pays full
+   XP and progression but contributes nothing to leaderboard score.
 5. **Read endpoints are cached, write endpoints are audited.** Level content and
    leaderboards go through `RedisService.getOrSet`. Every economy mutation writes a ledger
    row, not just a balance.

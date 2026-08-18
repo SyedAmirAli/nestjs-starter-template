@@ -108,6 +108,12 @@ model Level {
 }
 ```
 
+`Level` also gains difficulty and constraint-override columns in
+[08-difficulty/01](../08-difficulty/01-constraint-config.md), and the delta payload gains a
+resolved `constraints` block. That is additive to everything below — a constraint retune is
+just a content publish, which is exactly why it belongs in this sync path rather than in an
+endpoint of its own.
+
 `wordXp` and `sentenceXp` are **stored columns, not derived**. The client currently computes
 them at seed time (`wordXp = 20 + (chapter - 1) * 10`, `sentenceXp = wordXp + 20`). Storing
 them lets a single level be re-tuned without changing a global formula and without an app

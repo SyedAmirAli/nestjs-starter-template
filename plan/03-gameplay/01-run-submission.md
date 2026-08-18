@@ -4,6 +4,11 @@
 authoritative consequences. This is the most important endpoint in the system; almost
 everything else reads what it writes.
 
+> **Extended by [08-difficulty/02](../08-difficulty/02-attempt-lifecycle.md).** A run is now
+> an *attempt* with an `outcome` (`SOLVED` / `TIMEOUT` / `HEARTS_DEPLETED` / `ABANDONED`),
+> and the submission carries hearts, granted time and a constraint snapshot. `powersUsed`
+> becomes a typed map. Everything below still holds for the `SOLVED` path.
+
 ## The principle
 
 The client sends **what happened**. The server decides **what it was worth**.
