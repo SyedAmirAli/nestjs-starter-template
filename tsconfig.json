@@ -17,6 +17,16 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    // This config is for the editor and for typechecking only — tsconfig.build.json is the
+    // one that emits, and it turns this back off.
+    //
+    // Without `noEmit`, a bare `tsc -p tsconfig.json` quietly writes a SECOND copy of the
+    // app to dist/. This config has no `include`, so it also sees test/ and
+    // prisma.config.ts; that pushes the inferred rootDir up to the project root and the copy
+    // lands at dist/src/main.js rather than dist/main.js. Nest's watcher then resolves its
+    // entrypoint to that copy — which never went through `tsc-alias` — and the server
+    // crash-loops on `Cannot find module '@/config/dotenv'`.
+    "noEmit": true,
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -25,5 +35,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
   },
-  "exclude": ["node_modules", "dist"]
+  // `./web` is the admin console's React app: its own TypeScript project, with DOM libs,
+  // JSX, Vite types and a separate build. Compiling it here fails on the first .tsx file
+  // and, worse, would emit it into the server's dist/. It is built by `yarn build:web`.
+  //
+  // Written `./web`, not `web`, so it can only ever mean the root-level directory. The
+  // server's own console plumbing lives in `src/web/` and MUST still be compiled — a bare
+  // `web` risks matching both the day someone changes how patterns are resolved.
+  "exclude": ["node_modules", "dist", "./web"]
 }

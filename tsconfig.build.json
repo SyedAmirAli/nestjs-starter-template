@@ -1,4 +1,16 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "prisma.config.ts"]
+  "compilerOptions": {
+    // The base config sets `noEmit` so that typechecking it cannot scatter output; this is
+    // the config that actually builds, so it opts back in.
+    "noEmit": false,
+    // Pinned rather than inferred. tsc derives rootDir from the common ancestor of every
+    // file in the program, so one stray .ts outside src/ would silently move the whole
+    // build from dist/main.js to dist/src/main.js and break `start:prod` and the dev
+    // watcher. Stating it means such a file is a loud compile error instead.
+    "rootDir": "src"
+  },
+  // `exclude` replaces the base config's rather than extending it, so `./web` — the admin
+  // console's React app — has to be repeated here. See the note in tsconfig.json.
+  "exclude": ["node_modules", "test", "dist", "./web", "**/*spec.ts", "prisma.config.ts"]
 }

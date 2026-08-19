@@ -13,6 +13,7 @@ import { GlobalSuccessInterceptor } from '@/common/interceptors/global-success.i
 import { appValidationPipe } from '@/common/pipes/validation.pipe';
 import { PrismaService } from '@/prisma/prisma.service';
 import { printStartupBanner } from '@/shared/utils/startup-banner';
+import { mountWebConsole } from '@/web';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const pkg = require('../package.json') as { version: string };
@@ -47,6 +48,11 @@ async function bootstrap(): Promise<void> {
 
     const docsPath = setupSwagger(app);
 
+    // The admin console claims `/` as a catch-all, so it must be mounted after every API
+    // surface is known — it excludes them by prefix (src/web/reserved-paths.ts) rather than
+    // by asking the router.
+    const web = mountWebConsole(app);
+
     // Upload-friendly Node server timeouts. See server-timeouts.ts for why this has to be a
     // direct mutation of the http.Server and for the size budget it is matched to.
     applyServerTimeouts(app.getHttpServer());
@@ -64,11 +70,13 @@ async function bootstrap(): Promise<void> {
         health: `${base}/health`,
         docs: docsPath ? `${base}${docsPath}` : undefined,
         dbConnected,
+        console: web ? `${base}/  (${web.mode} → ${web.source})` : undefined,
         routes: [
             'GET   /health',
             'POST  /api/auth/*        (Better Auth — sign-in, session, OTP)',
             'POST  /v1/auth/register  GET /v1/auth/me',
             'GET   /v1/auth/me/settings',
+            ...(web ? ['GET   /*                 (admin console — ADMIN session required)'] : []),
         ],
     });
 }

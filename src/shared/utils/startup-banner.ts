@@ -6,6 +6,8 @@ export interface BannerInfo {
     health: string;
     dbConnected: boolean;
     docs?: string;
+    /** Admin web console, when it is mounted. Omitted entirely when WEB_ENABLED=false. */
+    console?: string;
     routes?: string[];
 }
 
@@ -34,6 +36,9 @@ export function printStartupBanner(info: BannerInfo): void {
     ];
     if (info.docs) {
         meta.splice(2, 0, `Docs      ${info.docs}`);
+    }
+    if (info.console) {
+        meta.splice(info.docs ? 3 : 2, 0, `Console   ${info.console}`);
     }
 
     const sections: string[][] = [[`${info.name}  v${info.version}`, 'AI Career OS'], meta];

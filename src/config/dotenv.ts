@@ -1,6 +1,6 @@
 import { Color } from '@/helper/Color';
 import { configDotenv } from 'dotenv';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 // __dirname is dist/config at runtime and src/config under ts-node, so ../../ lands on the
 // project root either way.
@@ -32,6 +32,38 @@ export const APP_BASE_URL = process.env['APP_BASE_URL'] ?? `http://localhost:${P
  * before production.
  */
 export const CORS_ORIGINS = process.env['CORS_ORIGINS'] ?? '*';
+
+/* --------------------------------------------------------------- Web console */
+
+/**
+ * The admin web console (see src/web/), a Vite + React SPA served from `/` by this same
+ * process. It sits behind an ADMIN-role session gate, and it never overlaps the API: `/v1`,
+ * `/api`, `/health` and `/docs` are claimed first (src/web/reserved-paths.ts).
+ *
+ * One process rather than two deployments because the console is an operator tool, not a
+ * product surface — co-hosting makes it same-origin, which means the existing Better Auth
+ * session cookie authenticates it with no CORS relaxation and no second token to leak.
+ */
+export const WEB_ENABLED = (process.env['WEB_ENABLED'] ?? 'true') === 'true';
+
+/**
+ * Dev only: the Vite dev server this process reverse-proxies `/` to, HMR websocket included.
+ *
+ * Not Vite's default 5173. That port — and 5174, the port Vite falls back to — belong to
+ * whichever project got there first, and a developer with two Vite apps open would have this
+ * one silently proxying to the other's. 5273 is unclaimed and specific to this console.
+ *
+ * The port is pinned with `strictPort: true` in web/vite.config.ts, so the two values must
+ * be changed together. Without the pin, Vite walks to the next free port on a clash and the
+ * proxy — which targets a fixed URL — starts answering 502 with no obvious cause.
+ */
+export const WEB_DEV_SERVER_URL = process.env['WEB_DEV_SERVER_URL'] ?? 'http://localhost:5273';
+
+/**
+ * Production only: the built SPA. Relative paths resolve from the project root (`../..` from
+ * dist/config at runtime, src/config under ts-node), matching how the .env file is located.
+ */
+export const WEB_DIST_DIR = resolve(join(__dirname, '../..'), process.env['WEB_DIST_DIR'] ?? 'web/dist');
 
 /* ------------------------------------------------------------------ Database */
 

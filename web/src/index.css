@@ -1,0 +1,54 @@
+/*
+ * Ant Design owns the design system. Tailwind is here for layout and spacing only.
+ *
+ * ── Why Preflight is not imported ───────────────────────────────────────────────
+ * Tailwind's Preflight is an opinionated reset that unsets borders, list styles,
+ * heading sizes and form-control appearance globally. Ant Design ships its own reset
+ * tuned to its components, and running both means Preflight quietly strips things antd
+ * expects to be there. So `tailwindcss/preflight.css` is absent below and antd's reset
+ * takes the slot it would have occupied — `layer(base)`, the same layer Preflight uses.
+ *
+ * ── How the cascade resolves antd vs. Tailwind ──────────────────────────────────
+ * Unlayered CSS always beats layered CSS, whatever the specificity. That gives, from
+ * weakest to strongest:
+ *
+ *   1. theme        Tailwind's design tokens
+ *   2. base         antd's reset          ← overridable by a utility, as a reset should be
+ *   3. utilities    Tailwind's utilities
+ *   4. (unlayered)  antd's component styles, injected at runtime by its CSS-in-JS
+ *
+ * So antd components win by default: a utility class cannot silently alter a Button's
+ * padding or a Card's background, but it can still position and space things, and it can
+ * still override the plain-element baseline. That ordering is the whole point — do not
+ * pass `layer` to ConfigProvider, which would move antd into `@layer antd` and let any
+ * stray utility outrank it.
+ *
+ * ── Consequence worth knowing ───────────────────────────────────────────────────
+ * Without Preflight there is no global `border-style: solid; border-width: 0`, so
+ * Tailwind's bare `border` class renders nothing on its own. Write `border border-solid`,
+ * or reach for an antd component, which is usually the better answer here anyway.
+ */
+
+@layer theme, base, components, utilities;
+
+@import 'antd/dist/reset.css' layer(base);
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/*
+ * The two colours the shell paints before React mounts. Everything else comes from antd's
+ * theme tokens — these exist only so the first paint is not a white flash, and they are
+ * antd's own dark `colorBgBase` and `colorText`.
+ */
+:root {
+  color-scheme: dark;
+  background: #000;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}

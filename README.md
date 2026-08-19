@@ -22,6 +22,7 @@ plan assumes, and this codebase satisfies it.
 | Object storage | S3-compatible (Cloudflare R2 / MinIO), private bucket, presigned URLs |
 | LLM            | Anthropic, provider-abstracted, with a cost ledger                    |
 | API docs       | `@nestjs/swagger` at `/docs`                                          |
+| Admin console  | Vite + React 19, Ant Design 6 (Tailwind 4 for layout, no Preflight)   |
 
 ## Getting started
 
@@ -31,19 +32,26 @@ yarn install
 cp .env.example .env          # fill in the blanks — see "Environment" below
 sudo -u postgres psql -f scripts/db-bootstrap.sql   # role, database, extensions (once)
 
+yarn install
+yarn install:web              # the admin console has its own dependency tree
+
 yarn db:push                  # apply schema + generate client + apply prisma/sql/*.sql
-yarn dev                      # http://localhost:4100
+yarn dev                      # API + admin console together
 ```
 
-The API prints a startup banner with its URL, the health endpoint, the docs path and whether
-the database is reachable.
+The API prints a startup banner with its URL, the health endpoint, the docs path, the admin
+console and whether the database is reachable.
 
 ### Scripts
 
 | Command                              | What it does                                                    |
 | ------------------------------------ | --------------------------------------------------------------- |
-| `yarn dev`                           | Watch-mode dev server                                           |
-| `yarn build`                         | Clean build, then rewrite `@/*` aliases with `tsc-alias`        |
+| `yarn dev`                           | Watch-mode API **and** the console's Vite server, together      |
+| `yarn dev:api` / `yarn dev:web`      | One half at a time                                              |
+| `yarn build`                         | `build:api` then `build:web`                                    |
+| `yarn build:api`                     | Clean build, then rewrite `@/*` aliases with `tsc-alias`        |
+| `yarn build:web`                     | Type-check and bundle the console into `web/dist`               |
+| `yarn install:web`                   | Install the console's dependencies                              |
 | `yarn lint`                          | ESLint with `--fix`                                             |
 | `yarn test`                          | Unit tests                                                      |
 | `yarn test:e2e`                      | End-to-end tests **against a running server** (see below)       |
@@ -73,6 +81,7 @@ src/
     cursor.util.ts     keyset pagination
     prisma-query-builder.service.ts
   modules/admin/audit/ audit trail (global service + admin endpoints)
+  web/                 admin console plumbing — reserved paths, admin gate, proxy, static
   shared/
     storage/           S3 client, presign, HEAD, prefix sweep
     redis/             client, cache-aside service, status probe, lifecycle control
@@ -132,6 +141,82 @@ Everything alongside it lives at `/v1/auth`:
 Default-deny: every route requires a session except `/health` and registration.
 `role` is `input: false` on the Better Auth user model, so a client cannot set it; sending it
 anyway is a `400`, not a silent drop.
+
+## Admin console
+
+A Vite + React SPA in `web/`, served by this same process at `/`. Co-hosted rather than
+deployed separately so it is same-origin: the Better Auth session cookie authenticates it
+with no CORS relaxation and no second credential.
+
+| Mode                       | How `/` is served                                          |
+| -------------------------- | ---------------------------------------------------------- |
+| `NODE_ENV=development`     | Reverse-proxied to the Vite dev server, HMR websocket included |
+| anything else              | `web/dist` as static files, with SPA history fallback      |
+
+**Nothing of the console reaches a caller without an `ADMIN` session — not even the
+JavaScript bundle.** A rejected navigation gets a small server-rendered sign-in page
+(`src/web/login-page.ts`); a rejected sub-resource gets the normal JSON error envelope, so a
+`fetch` reports an expired session rather than choking on HTML. Because the sign-in screen
+must be reachable by someone who is not allowed to download the bundle, it lives on the
+server and not in React.
+
+### Routes never collide
+
+The console is a catch-all on `/`, which is only safe because these prefixes are claimed
+first — `RESERVED_API_PREFIXES` in `src/web/reserved-paths.ts` is the single source of truth:
+
+```
+/v1        every Nest controller          /health    liveness probe
+/api       Better Auth's router           /docs      Swagger (+ -json, -yaml)
+```
+
+New endpoints go under `/v1` and nothing changes. A new **top-level** API path must be added
+to that list in the same commit that registers it, or the console will answer it first — and
+the failure is silent, returning HTML to an API caller. `src/web/reserved-paths.spec.ts`
+pins the boundary, including near-misses like `/v1analytics` and `/apikeys`.
+
+Console routes are added in `web/src/App.tsx` alone; the history fallback already serves the
+shell for any unmatched path.
+
+### UI: Ant Design first, Tailwind for layout
+
+**Ant Design owns the components.** Tailwind is present for layout and spacing, and is
+deliberately kept out of the design system's way — its Preflight reset is *not* imported,
+because Preflight unsets borders, heading sizes and form-control appearance globally and
+quietly strips things antd expects. antd's own reset (`antd/dist/reset.css`) takes the slot
+Preflight would have occupied.
+
+The cascade is arranged so that antd wins any genuine conflict. Unlayered CSS beats layered
+CSS regardless of specificity, which gives, weakest to strongest:
+
+```
+@layer theme       Tailwind tokens
+@layer base        antd's reset      ← a utility may override this, as with any reset
+@layer utilities   Tailwind utilities
+(unlayered)        antd components, injected at runtime by its CSS-in-JS
+```
+
+Two consequences follow, both intended:
+
+- **A utility cannot restyle an antd component.** `<Layout className="min-h-screen">` does
+  nothing, because `.ant-layout` sets its own `min-height`. Style antd components through
+  antd — props, `style`, and `theme.useToken()` — and save utilities for plain elements.
+  Never pass `layer` to `ConfigProvider`; it moves antd into `@layer antd` and inverts all
+  of the above.
+- **Bare `border` renders nothing**, since Preflight's global `border-style: solid` is gone.
+  Write `border border-solid`.
+
+Theme lives in `web/src/theme.ts` — thin on purpose, since the dark algorithm's defaults are
+the design. The one place that cannot read those tokens is the server-rendered sign-in page,
+which hard-codes them; `src/web/login-page.ts` and `web/src/theme.ts` have to change together
+or the two halves of the same product stop matching across the sign-in page load.
+
+### Configuration
+
+`WEB_ENABLED` (default on), `WEB_DEV_SERVER_URL` (default `http://localhost:5273` — not
+Vite's 5173, which collides with any other Vite project on the machine), and `WEB_DIST_DIR`
+(default `web/dist`). The dev port is pinned with `strictPort` in `web/vite.config.ts`, so it
+and `WEB_DEV_SERVER_URL` must change together.
 
 ## Uploads
 
