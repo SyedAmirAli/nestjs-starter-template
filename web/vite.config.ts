@@ -2,24 +2,33 @@ import { defineConfig } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
 /**
  * The admin console.
  *
- * The browser never talks to this dev server directly. In development the API
- * reverse-proxies `/` here (WEB_DEV_SERVER_URL); in production it serves `dist/` itself.
- * Either way the console and the API share one origin, which is what lets `/v1` calls carry
- * the session cookie with no CORS and no second token.
+ * Served under `/admin` (Vite `base` and the router's `basepath` must agree). The browser
+ * never talks to this dev server directly. In development the API reverse-proxies `/admin`
+ * here (WEB_DEV_SERVER_URL); in production it serves `dist/` itself. Either way the console
+ * and the API share one origin, which is what lets `/v1` calls carry the session cookie with
+ * no CORS and no second token.
  *
  * That also means HMR must not be configured: with no `server.ws.clientPort`, Vite's client
  * connects its websocket back to whichever origin served the page — the API — and the proxy
- * forwards the upgrade. Pinning a port here would make the client dial 5173 directly,
- * escaping the proxy and, with it, the admin gate.
+ * forwards the upgrade. Pinning a port here would make the client dial 5273 directly,
+ * escaping the proxy.
  *
  * https://vite.dev/config/
  */
 export default defineConfig({
+  base: '/admin/',
   plugins: [
+    // Must run before the React plugin so the route tree exists before JSX is compiled.
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
+      quoteStyle: 'single',
+    }),
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     // Tailwind is the layout/spacing tool here, not the design system — Ant Design owns the

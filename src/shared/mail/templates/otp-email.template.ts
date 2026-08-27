@@ -5,12 +5,12 @@ const LOGO_URL = process.env['MAIL_LOGO_URL'] ?? '';
 export type OtpType = 'sign-in' | 'email-verification' | 'forget-password' | 'change-email' | 'account-deletion';
 
 const OTP_PURPOSE_COPY: Record<OtpType, string> = {
-    'sign-in': 'Use the code below to sign in to your glowquest account.',
+    'sign-in': 'Use the code below to sign in to your base-app account.',
     'email-verification': 'Use the code below to verify your email address.',
     'forget-password': 'Use the code below to reset your password.',
     'change-email': 'Use the code below to confirm your new email address.',
     'account-deletion':
-        'Use the code below to confirm permanent deletion of your glowquest account. This cannot be undone.',
+        'Use the code below to confirm permanent deletion of your base-app account. This cannot be undone.',
 };
 
 /** `account-deletion` gets a red header + explicit warning banner instead of the standard green. */
@@ -62,7 +62,7 @@ export function renderOtpEmail({ otp, type, expiresInMinutes }: OtpEmailInput): 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${destructive ? 'Confirm glowquest account deletion' : 'Your glowquest verification code'}</title>
+    <title>${destructive ? 'Confirm app account deletion' : 'Your app verification code'}</title>
   </head>
   <body style="margin:0;padding:0;background:#F1F5F9;font-family:Arial,Helvetica,sans-serif;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F1F5F9;padding:32px 16px;">
@@ -73,8 +73,8 @@ export function renderOtpEmail({ otp, type, expiresInMinutes }: OtpEmailInput): 
               <td style="background:${headerColor};padding:24px 32px;">
                 ${
                     LOGO_URL
-                        ? `<img src="${LOGO_URL}" alt="glowquest" height="28" style="display:block;height:28px;width:auto;" />`
-                        : `<span style="display:block;font-size:20px;font-weight:700;letter-spacing:0.02em;color:#FFFFFF;">glowquest</span>`
+                        ? `<img src="${LOGO_URL}" alt="app" height="28" style="display:block;height:28px;width:auto;" />`
+                        : `<span style="display:block;font-size:20px;font-weight:700;letter-spacing:0.02em;color:#FFFFFF;">app</span>`
                 }
               </td>
             </tr>
@@ -105,7 +105,7 @@ export function renderOtpEmail({ otp, type, expiresInMinutes }: OtpEmailInput): 
               <td style="padding:32px;">
                 <hr style="border:none;border-top:1px solid #E2E8F0;margin:0 0 20px;" />
                 <p style="margin:0;font-size:12px;line-height:1.6;color:#94A3B8;text-align:center;">
-                  glowquest — your AI career operating system.<br />
+                  base-app — your AI career operating system.<br />
                   This is an automated message, please don't reply to this email.
                 </p>
               </td>

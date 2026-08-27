@@ -292,7 +292,7 @@ type RuntimeDataModel = {
  *
  * `_runtimeDataModel` is internal to Prisma, so a `null` return means "can't tell" and
  * callers must leave the field untouched — a rename in a future Prisma release then
- * degrades to today's behaviour instead of breaking every query. Delegates are camelCase;
+ * degrades to today's behavior instead of breaking every query. Delegates are camelCase;
  * the datamodel is keyed by PascalCase model name.
  */
 const orderableCache = new Map<string, Set<string> | null>();
@@ -657,7 +657,7 @@ export default class PrismaQueryBuilder<T = any> {
         page,
         baseUrl,
         dtoClass,
-    }: PaginateProps & {
+    }: PaginateProps<DTO> & {
         dtoClass?: ClassConstructor<DTO>;
     } = {}): Promise<PaginatedResult<DTO>> {
         if (!limit) limit = '10';
@@ -673,13 +673,10 @@ export default class PrismaQueryBuilder<T = any> {
 
         // Handle select fields
         if (Array.isArray(columns) && columns[0] !== '*' && columns[0] !== '#') {
-            this.selectFields = columns.reduce<Record<string, boolean>>(
-                (acc: Record<string, boolean>, field: string) => {
-                    acc[field] = true;
-                    return acc;
-                },
-                {},
-            );
+            this.selectFields = columns.reduce<Record<string, boolean>>((acc, field) => {
+                (acc[field] as boolean) = true;
+                return acc;
+            }, {});
         } else if (!Array.isArray(columns) && typeof columns === 'object' && Object.keys(columns).length > 0) {
             // A real Prisma `select` object was passed. Arrays like ['*'] / ['#'] are sentinels
             // (whole row) and must NOT become the select — that yields an invalid `select: ["*"]`.
@@ -847,7 +844,7 @@ export default class PrismaQueryBuilder<T = any> {
         page = 1,
         baseUrl = '',
         dtoClass,
-    }: PaginateProps & {
+    }: PaginateProps<DTO> & {
         dtoClass?: ClassConstructor<DTO>;
     } = {}): Promise<SimplePaginatedResult<DTO>> {
         if (!limit) limit = 10;
@@ -862,13 +859,10 @@ export default class PrismaQueryBuilder<T = any> {
         const skip = (pageNumber - 1) * limitNumber;
 
         if (Array.isArray(columns) && columns[0] !== '*' && columns[0] !== '#') {
-            this.selectFields = columns.reduce<Record<string, boolean>>(
-                (acc: Record<string, boolean>, field: string) => {
-                    acc[field] = true;
-                    return acc;
-                },
-                {},
-            );
+            this.selectFields = columns.reduce<Record<string, boolean>>((acc, field) => {
+                (acc[field] as boolean) = true;
+                return acc;
+            }, {});
         } else if (!Array.isArray(columns) && typeof columns === 'object' && Object.keys(columns).length > 0) {
             // A real Prisma `select` object was passed. Arrays like ['*'] / ['#'] are sentinels
             // (whole row) and must NOT become the select — that yields an invalid `select: ["*"]`.
@@ -1048,9 +1042,9 @@ export interface SimplePaginatedResult<Model> {
     perPage: number;
 }
 
-export interface PaginateProps {
+export interface PaginateProps<T> {
     limit?: number | string | null;
-    columns?: any;
+    columns?: Array<keyof T> | ['*'];
     pageName?: string | null;
     page?: number | string | null;
     baseUrl?: string | null;

@@ -1,53 +1,50 @@
-import { useEffect, useState } from 'react'
-import { apiFetch } from './api'
+import { ApiError, apiFetch } from './api';
+import { ADMIN_BASEPATH } from './paths';
 
 /** The shape `GET /v1/auth/me` returns (src/auth/auth.service.ts, getCurrentUser). */
 export interface CurrentUser {
-  id: string
-  name: string
-  email: string
-  emailVerified: boolean
-  image: string | null
-  role: 'USER' | 'ADMIN'
-  createdAt: string
-}
-
-export interface SessionState {
-  user: CurrentUser | null
-  loading: boolean
-  error: string | null
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    role: 'USER' | 'ADMIN';
+    createdAt: string;
+    /** True when the signed-in email is on the protected-users list (password reset / hard delete). */
+    isSuperAdmin?: boolean;
 }
 
 /**
- * The signed-in administrator.
+ * The signed-in user, or `null` if there is no session.
  *
- * This is a display concern, not an access check: the admin gate already refused to serve
- * this bundle to anyone without an ADMIN session, and every endpoint it calls re-checks on
- * the server. Treating the result as authorisation would be the classic mistake — it is only
- * ever a name to put in the header.
+ * Does not bounce to login on 401: the caller (route `beforeLoad`) decides whether that is
+ * a redirect or a public page. Every other `apiFetch` still treats 401 as "go sign in".
  */
-export function useSession(): SessionState {
-  const [state, setState] = useState<SessionState>({ user: null, loading: true, error: null })
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    apiFetch<CurrentUser>('/auth/me', { signal: controller.signal })
-      .then((user) => setState({ user, loading: false, error: null }))
-      .catch((error: unknown) => {
-        // React 19 StrictMode mounts effects twice in development; the first pass aborts.
-        if (controller.signal.aborted) return
-        setState({ user: null, loading: false, error: (error as Error).message })
-      })
-
-    return () => controller.abort()
-  }, [])
-
-  return state
+export async function fetchCurrentUser(signal?: AbortSignal): Promise<CurrentUser | null> {
+    try {
+        return await apiFetch<CurrentUser>('/auth/me', { signal, skipAuthRedirect: true });
+    } catch (error: unknown) {
+        if (error instanceof ApiError && error.status === 401) return null;
+        throw error;
+    }
 }
 
-/** Ends the session and returns to the gate, which will render the sign-in page. */
+export async function signIn(email: string, password: string): Promise<void> {
+    const response = await fetch('/api/auth/sign-in/email', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ email, password, rememberMe: true }),
+    });
+
+    const body: { message?: string } = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(body.message || `Sign-in failed (${response.status})`);
+    }
+}
+
+/** Ends the session and returns to the public login route. */
 export async function signOut(): Promise<void> {
-  await fetch('/api/auth/sign-out', { method: 'POST', credentials: 'same-origin' })
-  window.location.assign('/')
+    await fetch('/api/auth/sign-out', { method: 'POST', credentials: 'same-origin' });
+    window.location.assign(`${ADMIN_BASEPATH}/login`);
 }

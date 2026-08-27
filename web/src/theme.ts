@@ -4,10 +4,9 @@ import { theme, type ThemeConfig } from 'antd'
  * The console's Ant Design theme.
  *
  * Deliberately thin: the dark algorithm's defaults are the design, and every colour in the
- * console is expected to come from a token rather than from a hand-written hex. The one
- * place that cannot read these tokens is the server-rendered sign-in page
- * (`src/web/login-page.ts` in the API), which hard-codes the values below — the seam
- * between the two is a full page load, so they have to agree.
+ * console is expected to come from a token rather than from a hand-written hex. The
+ * remaining server-rendered surface is the "not an admin" refusal (`src/web/login-page.ts`),
+ * which hard-codes the values below so it still matches this theme.
  *
  * Do NOT add `layer` to the ConfigProvider that consumes this. See src/index.css for why.
  */

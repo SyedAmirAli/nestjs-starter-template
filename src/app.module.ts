@@ -7,6 +7,8 @@ import { AuthApiModule } from '@/auth/auth-api.module';
 import { authErrorFormatMiddleware } from '@/common/middleware/auth-error-format.middleware';
 import { LoggingModule } from '@/common/logging/logging.module';
 import { AuditModule } from '@/modules/admin/audit';
+import { UserModule } from '@/modules/admin/user';
+import { CacheManagementModule } from '@/modules/admin/cache-management';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { RedisModule } from '@/shared/redis/redis.module';
 import { QueueModule } from '@/shared/queue';
@@ -49,6 +51,8 @@ import { bullConnection } from '@/shared/queue/redis.connection';
             },
         }),
         AuthApiModule,
+        UserModule,
+        CacheManagementModule,
     ],
     controllers: [AppController],
 })

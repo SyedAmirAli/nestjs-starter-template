@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DEVELOPMENT, WEB_DEV_SERVER_URL, WEB_DIST_DIR, WEB_ENABLED } from '@/config/dotenv';
-import { adminGate, isAdminRequest } from './admin-gate';
+import { adminGate } from './admin-gate';
 import { createStaticSpa } from './static-spa';
 
 export interface WebConsoleInfo {
@@ -13,12 +13,12 @@ export interface WebConsoleInfo {
 }
 
 /**
- * Mounts the admin web console on `/`.
+ * Mounts the admin web console on `/admin`.
  *
  * Call after the Nest app exists and before it listens. Everything registered here is
- * Express-level middleware, which runs ahead of the Nest router, so the console would
- * shadow the entire API if it did not exclude the reserved prefixes first — the gate does
- * that check before anything else (see reserved-paths.ts).
+ * Express-level middleware, which runs ahead of the Nest router. The gate itself ignores
+ * anything that is not under `/admin` (and anything on a reserved API prefix), so `/v1`
+ * and `/health` keep answering as Nest routes — see reserved-paths.ts and console-path.ts.
  *
  * Ordering against the rest of the stack falls out of when this runs. Nest invokes every
  * module's `configure()` during `NestFactory.create`, so request-id, the access log and
@@ -46,7 +46,7 @@ export function mountWebConsole(app: NestExpressApplication): WebConsoleInfo | n
     const { createDevProxy } = require('./dev-proxy') as typeof import('./dev-proxy');
 
     const proxy = createDevProxy();
-    proxy.attachUpgrade(app.getHttpServer(), (req) => isAdminRequest(req.headers));
+    proxy.attachUpgrade(app.getHttpServer());
     app.use(adminGate(proxy.middleware));
 
     return { mode: 'proxy', source: WEB_DEV_SERVER_URL };

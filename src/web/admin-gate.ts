@@ -5,7 +5,8 @@ import { auth } from '@/auth/auth';
 import { normalizeUserRole } from '@/auth/user-role';
 import { serializeApiErrorBody } from '@/common/utils/serialize-api-error.util';
 import { isReservedApiPath } from './reserved-paths';
-import { renderForbiddenPage, renderSignInPage } from './login-page';
+import { ADMIN_LOGIN_PATH, isAdminConsolePath, isAdminLoginPath, isConsoleAssetPath } from './console-path';
+import { renderForbiddenPage } from './login-page';
 
 /** The admin identity attached to a request that cleared the gate. */
 export interface WebAdmin {
@@ -22,41 +23,42 @@ declare module 'express-serve-static-core' {
 }
 
 /**
- * The console's entire request path: reserved-path bailout, then session gate, then serve.
+ * The console's entire request path: reserved-path bailout, console-prefix check, then
+ * session gate, then serve.
  *
- * These three are one middleware rather than three chained ones, and that is deliberate. As
- * separate `app.use()` registrations, a reserved path would `next()` past the gate and land
- * on the serving middleware behind it — which has no notion of reserved paths and would
- * happily forward `/health` and `/v1/*` to the console. That failure is silent: the API keeps
+ * These are one middleware rather than chained ones, and that is deliberate. As separate
+ * `app.use()` registrations, a reserved path would `next()` past the gate and land on the
+ * serving middleware behind it — which has no notion of reserved paths and would happily
+ * forward `/health` and `/v1/*` to the console. That failure is silent: the API keeps
  * answering, just with the console's HTML. Composing them here makes it unrepresentable —
  * `serve` is only ever reached by a request that has passed both checks.
  *
- * On the gate itself: unlike the API — where the SPA would be handed to anyone and only its
- * data calls refused — nothing of the console reaches a caller without an ADMIN session, not
- * even the JavaScript bundle. An operator tool's client code is a map of the operator
- * surface: which endpoints exist, which fields they take, which flags gate which action.
- * Withholding it costs one round-trip on first load and removes that map from public reach.
+ * The console lives under `/admin`. `/admin/login` and the assets the SPA needs in order to
+ * boot (the JS bundle, Vite's HMR client, stylesheets) are public, because the sign-in
+ * screen is a route in the SPA. Every other `/admin` path still requires an ADMIN session:
+ * anonymous callers are sent to `/admin/login` (HTML) or a JSON 401 (XHR), and a signed-in
+ * non-admin gets the refusal page.
  *
- * A rejected *navigation* gets an HTML page it can act on: sign-in when there is no session,
- * "not an admin" when there is one that does not qualify. A rejected *sub-resource* (an XHR,
- * a script, a stylesheet) gets the standard JSON error envelope instead — an HTML login page
- * returned as the body of a `fetch` produces the classic "Unexpected token '<'" and hides the
- * real cause, which is an expired session.
- *
- * @param serve Renders the console for an authorised request — the dev proxy or the static
- *              handler, chosen by mount.ts.
+ * @param serve Renders the console for a request that is allowed through — the dev proxy or
+ *              the static handler, chosen by mount.ts.
  */
 export function adminGate(serve: RequestHandler): RequestHandler {
     return (req: Request, res: Response, next: NextFunction): void => {
-        // The console is a catch-all on `/`, so this is the entire reason `/v1` and `/api`
-        // still work. See reserved-paths.ts.
-        if (isReservedApiPath(req.path)) {
+        if (isReservedApiPath(req.path) || !isAdminConsolePath(req.path)) {
             next();
             return;
         }
 
+        const publicRoute = isAdminLoginPath(req.path) || isConsoleAssetPath(req.path);
+
         void resolveAdmin(req.headers)
             .then((admin) => {
+                if (publicRoute) {
+                    if (admin.ok) req.webAdmin = admin.user;
+                    serve(req, res, next);
+                    return;
+                }
+
                 if (!admin.ok) {
                     deny(req, res, admin);
                     return;
@@ -97,8 +99,9 @@ async function resolveAdmin(headers: IncomingHttpHeaders): Promise<GateResult> {
 
 /**
  * The same check, for callers that have raw headers rather than an Express request and no
- * way to render a response — the websocket upgrade path in dev-proxy.ts. Kept here so there
- * is exactly one definition of what "admin" means for the console.
+ * way to render a response — kept here so there is exactly one definition of what "admin"
+ * means for the console. HMR upgrades no longer use this: login is public, so the websocket
+ * that serves it must be too.
  */
 export async function isAdminRequest(headers: IncomingHttpHeaders): Promise<boolean> {
     return (await resolveAdmin(headers)).ok;
@@ -107,11 +110,16 @@ export async function isAdminRequest(headers: IncomingHttpHeaders): Promise<bool
 function deny(req: Request, res: Response, result: Extract<GateResult, { ok: false }>): void {
     const status = result.reason === 'anonymous' ? 401 : 403;
 
-    // The same URL yields the console, a sign-in page or a refusal depending purely on the
+    // The same URL yields the console, a redirect or a refusal depending purely on the
     // cookie. Any cache that missed that — a shared proxy, or the browser's own back/forward
     // cache — could hand one user's answer to another.
     res.setHeader('Cache-Control', 'no-store, must-revalidate');
     res.setHeader('Vary', 'Cookie');
+
+    if (result.reason === 'anonymous' && wantsHtml(req)) {
+        res.redirect(302, loginLocation(req));
+        return;
+    }
 
     if (!wantsHtml(req)) {
         res.status(status)
@@ -132,8 +140,22 @@ function deny(req: Request, res: Response, result: Extract<GateResult, { ok: fal
         return;
     }
 
-    const html = result.reason === 'anonymous' ? renderSignInPage() : renderForbiddenPage(result.email);
-    res.status(status).type('html').send(html);
+    if (result.reason === 'not-admin') {
+        res.status(status).type('html').send(renderForbiddenPage(result.email));
+        return;
+    }
+}
+
+/**
+ * Open-redirect-safe bounce to the SPA login, carrying the page the caller actually wanted
+ * so a successful sign-in can return them there.
+ */
+function loginLocation(req: Request): string {
+    const next = req.originalUrl.split('?')[0] ?? '';
+    if (isAdminConsolePath(next) && !isAdminLoginPath(next)) {
+        return `${ADMIN_LOGIN_PATH}?redirect=${encodeURIComponent(next)}`;
+    }
+    return ADMIN_LOGIN_PATH;
 }
 
 /**

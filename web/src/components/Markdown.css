@@ -1,0 +1,125 @@
+/*
+ * Styles for sanitized markdown output (components/Markdown.tsx).
+ *
+ * Scoped to `.bt-md` so it can't leak into antd's own markup. Colours come from CSS variables
+ * the component sets from antd tokens — plain CSS can't read the token object, and hardcoding
+ * hex would break dark mode.
+ */
+
+.bt-md {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    padding: 0.5rem 0 0.2rem 0;
+}
+
+.bt-md > :first-child {
+    margin-block-start: 0;
+}
+.bt-md > :last-child {
+    margin-block-end: 0;
+}
+
+.bt-md p {
+    margin: 0;
+}
+
+.bt-md h1,
+.bt-md h2,
+.bt-md h3,
+.bt-md h4,
+.bt-md h5,
+.bt-md h6 {
+    margin: 0.8em 0 0.4em;
+    font-weight: 600;
+    line-height: 1.3;
+}
+.bt-md h1 {
+    font-size: 1.2em;
+}
+.bt-md h2 {
+    font-size: 1.12em;
+}
+.bt-md h3,
+.bt-md h4,
+.bt-md h5,
+.bt-md h6 {
+    font-size: 1.05em;
+}
+
+.bt-md ul,
+.bt-md ol {
+    margin: 0 0 0.6em;
+    padding-inline-start: 1.4em;
+}
+.bt-md ul {
+    list-style: disc outside;
+}
+.bt-md ol {
+    list-style: decimal outside;
+}
+.bt-md li {
+    margin: 0.15em 0;
+    line-height: 1.4;
+}
+
+.bt-md a {
+    color: var(--bt-md-primary);
+    text-decoration: underline;
+}
+
+.bt-md blockquote {
+    margin: 0 0 0.6em;
+    padding-inline-start: 0.8em;
+    border-inline-start: 3px solid var(--bt-md-border);
+    color: var(--bt-md-text-secondary);
+}
+
+.bt-md code {
+    font-family: var(--bt-md-font-code);
+    background: var(--bt-md-fill);
+    border: 1px solid var(--bt-md-border);
+    border-radius: 4px;
+    padding: 0.1em 0.3em;
+    font-size: 0.9em;
+}
+
+.bt-md pre {
+    margin: 0 0 0.6em;
+    padding: 0.6em;
+    background: var(--bt-md-fill);
+    border: 1px solid var(--bt-md-border);
+    border-radius: 6px;
+    /* A long code line must scroll inside the card, not widen the page. */
+    overflow-x: auto;
+}
+.bt-md pre code {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.bt-md hr {
+    border: none;
+    border-top: 1px solid var(--bt-md-border);
+    margin: 0.8em 0;
+}
+
+/* Wide tables scroll in their own box rather than pushing the page sideways. */
+.bt-md table {
+    display: block;
+    overflow-x: auto;
+    max-inline-size: 100%;
+    border-collapse: collapse;
+    margin: 0 0 0.6em;
+}
+.bt-md th,
+.bt-md td {
+    border: 1px solid var(--bt-md-border);
+    padding: 0.3em 0.5em;
+    text-align: start;
+    vertical-align: top;
+}
+.bt-md th {
+    background: var(--bt-md-fill);
+    font-weight: 600;
+}

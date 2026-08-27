@@ -110,7 +110,7 @@ export const UPLOAD_PROFILES = {
     document: defineProfile('document', 'file', DOCUMENT_MAX_BYTES, 1),
     /** Profile photo. */
     avatar: defineProfile('avatar', 'file', AVATAR_MAX_BYTES, 1),
-    /** `.glowquest-backup` archive being restored. */
+    /** `.base-backup` archive being restored. */
     backupRestore: defineProfile('backupRestore', 'file', BACKUP_MAX_BYTES, 1),
 } as const satisfies Record<string, UploadProfile>;
 

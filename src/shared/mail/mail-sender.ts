@@ -49,11 +49,11 @@ export async function sendMail({ to, subject, html }: SendMailInput): Promise<vo
 }
 
 const OTP_SUBJECT: Record<OtpEmailInput['type'], string> = {
-    'sign-in': 'Your glowquest sign-in code',
-    'email-verification': 'Verify your glowquest email',
-    'forget-password': 'Reset your glowquest password',
-    'change-email': 'Confirm your new glowquest email',
-    'account-deletion': 'Confirm glowquest account deletion',
+    'sign-in': 'Your app sign-in code',
+    'email-verification': 'Verify your app email',
+    'forget-password': 'Reset your app password',
+    'change-email': 'Confirm your new app email',
+    'account-deletion': 'Confirm app account deletion',
 };
 
 export async function sendOtpEmail(

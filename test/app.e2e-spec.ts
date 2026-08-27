@@ -25,7 +25,7 @@ const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:4100';
 const email = `e2e-${Date.now()}@example.com`;
 const password = 'supersecret123';
 
-describe('glowquest API (e2e)', () => {
+describe('base-app API (e2e)', () => {
     beforeAll(async () => {
         try {
             await request(BASE_URL).get('/health').expect(200);

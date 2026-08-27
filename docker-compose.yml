@@ -1,4 +1,4 @@
-# glowquest API — single-container deploy.
+# nest-template API — single-container deploy.
 #
 # Postgres and Redis are existing services on the host, not containers here. Only two values
 # genuinely differ inside a container, and they are the two set explicitly below.
@@ -12,8 +12,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        image: ghcr.io/syedamirali/glowquest-backend:latest
-        container_name: glowquest-backend
+        image: ghcr.io/syedamirali/nestjs-backend-starter-template:latest
+        container_name: nestjs-backend-starter-template
         restart: unless-stopped
         ports:
             - '${PORT:-4000}:4000'
@@ -36,9 +36,9 @@ services:
             # the container-specific value is set here instead — reassembled from the
             # decomposed DATABASE_* parts, which .env does supply.
             DATABASE_HOST: host.docker.internal
-            DATABASE_URL: 'postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@host.docker.internal:${DATABASE_PORT:-5432}/${DATABASE_NAME}?schema=public'
             REDIS_HOST: host.docker.internal
-            REDIS_URL: ''
+            DATABASE_URL: 'postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@host.docker.internal:${DATABASE_PORT:-5432}/${DATABASE_NAME}?schema=public'
+            REDIS_URL: 'redis://:${REDIS_PASSWORD}@host.docker.internal:${REDIS_PORT:-6379}/${REDIS_DB:-0}'
 
             # This compose file runs a single container with no separate worker deployment,
             # so the BullMQ workers must run in-process. NODE_ENV=production would otherwise

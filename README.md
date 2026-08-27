@@ -1,6 +1,6 @@
-# glowquest Backend
+# base-app Backend
 
-NestJS API for the glowquest AI Career OS mobile app.
+NestJS API for the base-app AI Career OS mobile app.
 
 This repository currently contains the **foundation** — auth, database, config, storage,
 queues, cache, logging and the deploy pipeline. Feature modules are specified in
@@ -144,44 +144,46 @@ anyway is a `400`, not a silent drop.
 
 ## Admin console
 
-A Vite + React SPA in `web/`, served by this same process at `/`. Co-hosted rather than
-deployed separately so it is same-origin: the Better Auth session cookie authenticates it
-with no CORS relaxation and no second credential.
+A Vite + React SPA in `web/`, served by this same process at `/admin`. Co-hosted rather
+than deployed separately so it is same-origin: the Better Auth session cookie authenticates
+it with no CORS relaxation and no second credential.
 
-| Mode                       | How `/` is served                                          |
-| -------------------------- | ---------------------------------------------------------- |
-| `NODE_ENV=development`     | Reverse-proxied to the Vite dev server, HMR websocket included |
-| anything else              | `web/dist` as static files, with SPA history fallback      |
+| Mode                   | How `/admin` is served                                         |
+| ---------------------- | -------------------------------------------------------------- |
+| `NODE_ENV=development` | Reverse-proxied to the Vite dev server, HMR websocket included |
+| anything else          | `web/dist` as static files, with SPA history fallback          |
 
-**Nothing of the console reaches a caller without an `ADMIN` session — not even the
-JavaScript bundle.** A rejected navigation gets a small server-rendered sign-in page
-(`src/web/login-page.ts`); a rejected sub-resource gets the normal JSON error envelope, so a
-`fetch` reports an expired session rather than choking on HTML. Because the sign-in screen
-must be reachable by someone who is not allowed to download the bundle, it lives on the
-server and not in React.
+`/admin/login` is public — that is the sign-in screen, a React route, so the JavaScript
+needed to boot it is served without a session. Every other `/admin` navigation requires an
+`ADMIN` session: an anonymous visitor is redirected to `/admin/login`, and a signed-in
+non-admin gets a small server-rendered refusal (`src/web/login-page.ts`). Dashboard routes
+are also gated in the client (`beforeLoad` on the authenticated layout) so a client-side
+transition cannot skip the check.
 
 ### Routes never collide
 
-The console is a catch-all on `/`, which is only safe because these prefixes are claimed
-first — `RESERVED_API_PREFIXES` in `src/web/reserved-paths.ts` is the single source of truth:
+The console lives under `/admin`, so `/v1` and `/health` are ordinary Nest routes. The gate
+still `next()`s the API prefixes first — `RESERVED_API_PREFIXES` in
+`src/web/reserved-paths.ts` — because it is registered as process-wide middleware:
 
 ```
 /v1        every Nest controller          /health    liveness probe
 /api       Better Auth's router           /docs      Swagger (+ -json, -yaml)
+/admin     this console
 ```
 
 New endpoints go under `/v1` and nothing changes. A new **top-level** API path must be added
-to that list in the same commit that registers it, or the console will answer it first — and
-the failure is silent, returning HTML to an API caller. `src/web/reserved-paths.spec.ts`
-pins the boundary, including near-misses like `/v1analytics` and `/apikeys`.
+to that list in the same commit that registers it. `src/web/reserved-paths.spec.ts` pins the
+boundary, including near-misses like `/v1analytics` and `/apikeys`.
 
-Console routes are added in `web/src/App.tsx` alone; the history fallback already serves the
-shell for any unmatched path.
+Console routes are files under `web/src/routes/` (TanStack Router). `/login` is public;
+everything else sits under the `_authenticated` layout and requires an admin session. The
+history fallback already serves the shell for any unmatched `/admin` path.
 
 ### UI: Ant Design first, Tailwind for layout
 
 **Ant Design owns the components.** Tailwind is present for layout and spacing, and is
-deliberately kept out of the design system's way — its Preflight reset is *not* imported,
+deliberately kept out of the design system's way — its Preflight reset is _not_ imported,
 because Preflight unsets borders, heading sizes and form-control appearance globally and
 quietly strips things antd expects. antd's own reset (`antd/dist/reset.css`) takes the slot
 Preflight would have occupied.
@@ -207,9 +209,9 @@ Two consequences follow, both intended:
   Write `border border-solid`.
 
 Theme lives in `web/src/theme.ts` — thin on purpose, since the dark algorithm's defaults are
-the design. The one place that cannot read those tokens is the server-rendered sign-in page,
-which hard-codes them; `src/web/login-page.ts` and `web/src/theme.ts` have to change together
-or the two halves of the same product stop matching across the sign-in page load.
+the design. The remaining server-rendered surface is the "not an admin" refusal, which
+hard-codes the same tokens; `src/web/login-page.ts` and `web/src/theme.ts` have to change
+together or that page stops matching the console.
 
 ### Configuration
 
@@ -236,7 +238,7 @@ the first bytes of the stored object and sniffs them before a file is ever marke
 ```
 users/{userId}/uploads/{fileId}/{originalName}
 users/{userId}/renders/{fileId}.pdf
-users/{userId}/backups/{backupId}.glowquest-backup
+users/{userId}/backups/{backupId}.base-app-backup
 users/{userId}/exports/{exportId}.zip
 ```
 
@@ -283,7 +285,7 @@ Push to `main` triggers `.github/workflows/docker-deploy.yml`:
 
 1. **verify** — install, generate the Prisma client, lint, test, build. The image is not
    built from code that does not compile.
-2. **build-and-push** — multi-stage Docker build to `ghcr.io/syedamirali/glowquest-backend`,
+2. **build-and-push** — multi-stage Docker build to `ghcr.io/syedamirali/base-app-backend`,
    tagged `:latest` and `:<sha>` so a rollback needs no rebuild.
 3. **deploy** — over SSH: pull (with retries, GHCR 503s are common), run
    `prisma migrate deploy`, recreate the container, then **wait for the healthcheck** before

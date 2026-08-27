@@ -16,7 +16,7 @@ import type { RedisControlAction, RedisControlDriver } from './redis-control.typ
  * Two transports, both handled here:
  *   REDIS_CONTROL_AGENT_URL=http://172.17.0.1:9099        (Docker bridge gateway — mirrors how
  *                                                          Redis/Postgres are already reached)
- *   REDIS_CONTROL_AGENT_URL=unix:/run/glowquest-control/agent.sock   (bind-mounted socket, no port)
+ *   REDIS_CONTROL_AGENT_URL=unix:/run/base-app-control/agent.sock   (bind-mounted socket, no port)
  */
 export class AgentDriver implements RedisControlDriver {
     readonly name = 'agent';
@@ -73,7 +73,7 @@ export class AgentDriver implements RedisControlDriver {
                     method: 'POST',
                     timeout: REDIS_CONTROL_TIMEOUT,
                     headers: {
-                        Host: isUnix ? 'glowquest-control' : new URL(base).host,
+                        Host: isUnix ? 'base-app-control' : new URL(base).host,
                         // Explicit zero-length body: without it Node picks chunked encoding for
                         // a bodyless POST, which the agent's stdlib HTTP server has to parse for
                         // no reason.
@@ -96,7 +96,7 @@ export class AgentDriver implements RedisControlDriver {
                 if (err.code === 'ECONNREFUSED' || err.code === 'ENOENT') {
                     reject(
                         new Error(
-                            `Host control agent unreachable at ${base}. Is glowquest-redis-control.service running on the host, and bound to an address the container can reach?`,
+                            `Host control agent unreachable at ${base}. Is base-app-redis-control.service running on the host, and bound to an address the container can reach?`,
                         ),
                     );
                     return;

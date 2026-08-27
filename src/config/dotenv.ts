@@ -14,7 +14,7 @@ export const TEST = NODE_ENV === 'test';
 export const PORT = Number(process.env['PORT'] ?? 4000);
 export const HOST = process.env['HOST'] ?? '0.0.0.0';
 
-export const APP_NAME = process.env['APP_NAME'] ?? 'glowquest';
+export const APP_NAME = process.env['APP_NAME'] ?? 'base-app';
 export const APP_VERSION = process.env['APP_VERSION'] ?? '1.0.0';
 
 /** Public origin of this API. Used for deep links in notifications and OAuth redirects. */
@@ -36,9 +36,10 @@ export const CORS_ORIGINS = process.env['CORS_ORIGINS'] ?? '*';
 /* --------------------------------------------------------------- Web console */
 
 /**
- * The admin web console (see src/web/), a Vite + React SPA served from `/` by this same
- * process. It sits behind an ADMIN-role session gate, and it never overlaps the API: `/v1`,
- * `/api`, `/health` and `/docs` are claimed first (src/web/reserved-paths.ts).
+ * The admin web console (see src/web/), a Vite + React SPA served from `/admin` by this same
+ * process. `/admin/login` is public; every other `/admin` navigation requires an ADMIN
+ * session. It never overlaps the API: `/v1`, `/api`, `/health` and `/docs` are claimed first
+ * (src/web/reserved-paths.ts).
  *
  * One process rather than two deployments because the console is an operator tool, not a
  * product surface — co-hosting makes it same-origin, which means the existing Better Auth
@@ -47,7 +48,7 @@ export const CORS_ORIGINS = process.env['CORS_ORIGINS'] ?? '*';
 export const WEB_ENABLED = (process.env['WEB_ENABLED'] ?? 'true') === 'true';
 
 /**
- * Dev only: the Vite dev server this process reverse-proxies `/` to, HMR websocket included.
+ * Dev only: the Vite dev server this process reverse-proxies `/admin` to, HMR websocket included.
  *
  * Not Vite's default 5173. That port — and 5174, the port Vite falls back to — belong to
  * whichever project got there first, and a developer with two Vite apps open would have this
@@ -81,9 +82,9 @@ export const DATABASE_PROVIDER: DBProvider =
  */
 export const DATABASE_HOST = process.env['DATABASE_HOST'] ?? 'localhost';
 export const DATABASE_PORT = Number(process.env['DATABASE_PORT'] ?? 5432);
-export const DATABASE_NAME = process.env['DATABASE_NAME'] ?? 'glowquest_backend';
-export const DATABASE_USERNAME = process.env['DATABASE_USERNAME'] ?? 'glowquest';
-export const DATABASE_PASSWORD = process.env['DATABASE_PASSWORD'] ?? 'glowquest_pg_9f3a2b7c4d1e';
+export const DATABASE_NAME = decodeURIComponent(process.env['DATABASE_NAME'] ?? '');
+export const DATABASE_USERNAME = decodeURIComponent(process.env['DATABASE_USERNAME'] ?? '');
+export const DATABASE_PASSWORD = decodeURIComponent(process.env['DATABASE_PASSWORD'] ?? '');
 
 export const DATABASE_URL =
     process.env['DATABASE_URL'] ??
@@ -95,7 +96,7 @@ export const BETTER_AUTH_SECRET = process.env['BETTER_AUTH_SECRET'] ?? null;
 export const BETTER_AUTH_URL = process.env['BETTER_AUTH_URL'] ?? APP_BASE_URL;
 
 /** Expo deep-link scheme — must match `scheme` in the mobile app's app.json. */
-export const EXPO_SCHEME = process.env['EXPO_SCHEME'] ?? 'glowquest';
+export const EXPO_SCHEME = process.env['EXPO_SCHEME'] ?? 'base-app';
 
 /**
  * Sign-in with Google (`openid email profile`).
@@ -167,7 +168,7 @@ export const S3_SECRET_KEY = process.env['S3_SECRET_KEY'] ?? process.env['CLOUDF
  * object this app writes is namespaced under this prefix. Trailing slashes are stripped so
  * `resolveKey` never produces a double separator.
  */
-export const S3_PREFIX = (process.env['S3_PREFIX'] ?? 'glowquest').replace(/\/+$/, '');
+export const S3_PREFIX = (process.env['S3_PREFIX'] ?? 'base-app').replace(/\/+$/, '');
 
 /**
  * Public base URL (a custom domain in front of the bucket). Only meaningful for objects that
@@ -184,8 +185,8 @@ export const S3_PUBLIC_BASE_URL = process.env['S3_PUBLIC_BASE_URL'] ?? null;
 export const REDIS_CLIENT = 'REDIS_CLIENT' as const;
 export const REDIS_HOST = process.env['REDIS_HOST'] ?? 'localhost';
 export const REDIS_PORT = Number(process.env['REDIS_PORT'] ?? 6379);
-export const REDIS_PASSWORD = process.env['REDIS_PASSWORD'] ?? undefined;
-export const REDIS_USERNAME = process.env['REDIS_USERNAME'] ?? undefined;
+export const REDIS_PASSWORD = decodeURIComponent(process.env['REDIS_PASSWORD'] ?? '');
+export const REDIS_USERNAME = decodeURIComponent(process.env['REDIS_USERNAME'] ?? '');
 export const REDIS_DB = Number(process.env['REDIS_DB'] ?? 0);
 export const REDIS_URL =
     process.env['REDIS_URL'] ??
@@ -230,7 +231,7 @@ export const REDIS_CONTROL_RESTART_CMD = process.env['REDIS_CONTROL_RESTART_CMD'
 
 /** `docker` driver — the bind-mounted Engine socket and the Redis container to act on. */
 export const REDIS_CONTROL_DOCKER_SOCKET = process.env['REDIS_CONTROL_DOCKER_SOCKET'] ?? '/var/run/docker.sock';
-export const REDIS_CONTROL_DOCKER_CONTAINER = process.env['REDIS_CONTROL_DOCKER_CONTAINER'] ?? 'glowquest-redis';
+export const REDIS_CONTROL_DOCKER_CONTAINER = process.env['REDIS_CONTROL_DOCKER_CONTAINER'] ?? 'base-app-redis';
 
 /** `agent` driver — an http(s) origin or `unix:/path/to.sock`. Token must match the agent's. */
 export const REDIS_CONTROL_AGENT_URL = process.env['REDIS_CONTROL_AGENT_URL'] ?? null;
@@ -252,6 +253,6 @@ export const BACKUP_ENCRYPTION_KEY = process.env['BACKUP_ENCRYPTION_KEY'] ?? nul
  * "App passwords" settings, which requires 2-Step Verification on the account.
  */
 export const MAIL_FROM = process.env['MAIL_FROM'] ?? null;
-export const MAIL_APP_PASSWORD = process.env['MAIL_APP_PASSWORD'] ?? null;
+export const MAIL_APP_PASSWORD = decodeURIComponent(process.env['MAIL_APP_PASSWORD'] ?? '');
 
 Color.line('', '-------------------------------------- ' + NODE_ENV + ' --------------------------------------', '');

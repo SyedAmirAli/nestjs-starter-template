@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { WEB_DIST_DIR } from '@/config/dotenv';
 import { serializeApiErrorBody } from '@/common/utils/serialize-api-error.util';
+import { adminConsoleDistPath } from './console-path';
 
 /**
  * Production: serve the built console out of `web/dist`, with SPA history fallback.
@@ -21,18 +22,18 @@ const INDEX_FILE = 'index.html';
  * (favicon, robots.txt) and keeps its name across deploys, so it must revalidate or a
  * replaced file would be pinned in browser caches indefinitely.
  */
-const IMMUTABLE_PREFIX = '/assets/';
+const IMMUTABLE_PREFIX = 'assets/';
 
 /**
  * `private`, never `public` — including for the fingerprinted assets.
  *
- * Every byte here is behind the admin gate, and a shared cache (a CDN, a corporate proxy)
- * that stored a `public` response would hand the console's JavaScript to the next anonymous
- * caller for the URL, quietly undoing the gate. `private` still lets the browser cache
- * normally, which is where the year-long lifetime actually pays off.
+ * The login route is public, so the bundle is reachable without a session. `private` still
+ * stops a shared cache (a CDN, a corporate proxy) from pinning a response for a URL whose
+ * body depends on the cookie — the shell especially, which the gate serves differently per
+ * session. The browser can still cache normally, which is where the year-long lifetime
+ * actually pays off.
  *
- * `Vary: Cookie` goes alongside for the same reason: the response for a given URL depends
- * entirely on the session cookie.
+ * `Vary: Cookie` goes alongside for the same reason.
  */
 const IMMUTABLE_CACHE = 'private, max-age=31536000, immutable';
 const REVALIDATE_CACHE = 'private, no-cache';
@@ -45,8 +46,9 @@ export function createStaticSpa(): RequestHandler {
             return;
         }
 
+        // Vite's `base` is `/admin/`, so `/admin/assets/…` must read `dist/assets/…`.
         // A leading slash would be read as an absolute path and bypass `root`.
-        const relative = req.path.replace(/^\/+/, '');
+        const relative = adminConsoleDistPath(req.path);
         if (relative === '') {
             sendIndex(res, next);
             return;
@@ -54,7 +56,7 @@ export function createStaticSpa(): RequestHandler {
 
         // Set before `sendFile`, which only supplies its own Cache-Control when the response
         // does not already carry one. That is also how the shell's `no-store` survives below.
-        res.setHeader('Cache-Control', req.path.startsWith(IMMUTABLE_PREFIX) ? IMMUTABLE_CACHE : REVALIDATE_CACHE);
+        res.setHeader('Cache-Control', relative.startsWith(IMMUTABLE_PREFIX) ? IMMUTABLE_CACHE : REVALIDATE_CACHE);
         res.setHeader('Vary', 'Cookie');
 
         res.sendFile(
@@ -80,8 +82,8 @@ export function createStaticSpa(): RequestHandler {
 }
 
 /**
- * The SPA shell, for `/` and for every client-side route (`/users/42`) that has no file
- * behind it.
+ * The SPA shell, for `/admin` and for every client-side route (`/admin/system`) that has no
+ * file behind it.
  *
  * Never cached: the admin gate serves this same URL differently per session, and a stale
  * shell also pins the old asset hashes after a deploy, which produces a console that loads

@@ -1,10 +1,11 @@
 /**
  * The top-level path namespaces the API owns, and which the web console must never claim.
  *
- * The web console is mounted at `/` and is therefore a catch-all: every path the API does
- * not answer becomes an admin-panel route. That is only safe while the two sets are
- * provably disjoint, so the boundary lives here, in one list, rather than being re-derived
- * by each middleware that needs it.
+ * The web console is mounted at `/admin`. The gate still runs as process-wide middleware
+ * (so it can inspect every request), and the first thing it does is `next()` anything on
+ * this list — otherwise a typo that registered the console as a catch-all on `/` would
+ * silently serve HTML to `/v1` and `/health`. The list is also what the HMR upgrade handler
+ * uses to leave API websockets alone.
  *
  * `/api` alone is not sufficient. The API surface is split across four namespaces:
  *
@@ -15,8 +16,7 @@
  *
  * ADDING A NEW TOP-LEVEL API PATH: put it under `/v1` and nothing here needs to change.
  * If it genuinely cannot live under `/v1` — a webhook receiver a third party dictates the
- * URL of, say — add it below in the same commit that registers it. A route added to the
- * server but not to this list is unreachable: the web catch-all answers it first.
+ * URL of, say — add it below in the same commit that registers it.
  */
 export const RESERVED_API_PREFIXES = ['/v1', '/api', '/health', '/docs', '/docs-json', '/docs-yaml'] as const;
 

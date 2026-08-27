@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Alert, Badge, Card, Col, Descriptions, Row, Skeleton, Tag, Typography } from 'antd';
 import { fetchHealth } from '../lib/api';
 
@@ -39,7 +39,7 @@ export function SystemPage() {
     const online = Boolean(health) && !error;
 
     return (
-        <>
+        <Fragment>
             <Typography.Title level={3} className="mb-1!">
                 System
             </Typography.Title>
@@ -69,6 +69,6 @@ export function SystemPage() {
                     </Card>
                 </Col>
             </Row>
-        </>
+        </Fragment>
     );
 }

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# glowquest API — NestJS backend, built as one deployable image.
+# base-app API — NestJS backend, built as one deployable image.
 #
 # Postgres and Redis are NOT part of this build. Both are expected as existing services the
 # container reaches over the network — see docker-compose.yml for how.
@@ -54,8 +54,8 @@ RUN yarn install --frozen-lockfile --production=true
 ##############################################################################
 FROM ${NODE_IMAGE} AS runtime
 
-LABEL org.opencontainers.image.source="https://github.com/syedamirali/glowquest-backend"
-LABEL org.opencontainers.image.description="glowquest API — AI Career OS backend"
+LABEL org.opencontainers.image.source="https://github.com/syedamirali/nestjs-starter-template"
+LABEL org.opencontainers.image.description="base-app API — AI Career OS backend"
 LABEL org.opencontainers.image.licenses="UNLICENSED"
 
 # wget backs the HEALTHCHECK below; busybox wget is already present in alpine.

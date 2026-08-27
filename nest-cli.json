@@ -1,9 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/nest-cli",
-  "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "compilerOptions": {
-    "//": "deleteOutDir MUST stay false. With it on, every incremental rebuild in `nest start --watch` wipes dist/ and the watcher relaunches node before tsc has re-emitted main.js — that's the intermittent `Cannot find module '.../dist/main'` on save. Clean builds are handled by the `build` script (rimraf dist) instead, so production output is still fresh.",
-    "deleteOutDir": false
-  }
+    "$schema": "https://json.schemastore.org/nest-cli",
+    "collection": "@nestjs/schematics",
+    "sourceRoot": "src",
+    "compilerOptions": {
+        "//": "deleteOutDir MUST stay false. With it on, every incremental rebuild in `nest start --watch` wipes dist/ and the watcher relaunches node before tsc has re-emitted main.js — that's the intermittent `Cannot find module '.../dist/main'` on save. Clean builds are handled by the `build` script (rimraf dist) instead, so production output is still fresh.",
+        "deleteOutDir": false
+    }
 }

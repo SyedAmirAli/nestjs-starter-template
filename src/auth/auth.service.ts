@@ -7,8 +7,8 @@ import { RegisterDto } from '@/auth/dto/register.dto';
 import { ApiException } from '@/common/errors/api.exception';
 import { isDuplicateUserError, resolveHttpStatus } from '@/common/utils/api-error-status.util';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AuditService } from '@/modules/admin/audit';
-import { AuditAction, AUDIT_RESOURCES } from '@/modules/admin/audit/audit.constants';
+import { AuditService, AuditAction, AUDIT_RESOURCES } from '@/modules/admin/audit';
+import { isProtectedEmail } from '@/auth/protected-users';
 
 /**
  * Better Auth's own messages are developer-facing and inconsistent in tone. These are the
@@ -40,7 +40,7 @@ export class AuthService {
      * the endpoint the app calls on launch to find out what is true *now*.
      */
     async getCurrentUser(session: UserSession<typeof auth>) {
-        return this.prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
             where: { id: session.user.id },
             select: {
                 id: true,
@@ -53,6 +53,8 @@ export class AuthService {
                 meta: true,
             },
         });
+        if (!user) return null;
+        return { ...user, isSuperAdmin: isProtectedEmail(user.email) };
     }
 
     /**

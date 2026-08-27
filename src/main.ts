@@ -48,9 +48,8 @@ async function bootstrap(): Promise<void> {
 
     const docsPath = setupSwagger(app);
 
-    // The admin console claims `/` as a catch-all, so it must be mounted after every API
-    // surface is known — it excludes them by prefix (src/web/reserved-paths.ts) rather than
-    // by asking the router.
+    // The admin console claims `/admin`, so it must be mounted after every API surface is
+    // known — it ignores reserved prefixes and anything outside `/admin` (src/web).
     const web = mountWebConsole(app);
 
     // Upload-friendly Node server timeouts. See server-timeouts.ts for why this has to be a
@@ -63,20 +62,26 @@ async function bootstrap(): Promise<void> {
     const base = `http://localhost:${PORT}`;
 
     printStartupBanner({
-        name: 'glowquest',
+        name: 'base',
         version: pkg.version,
         env: process.env.NODE_ENV ?? 'development',
         url: `${base}/${API_PREFIX}`,
         health: `${base}/health`,
         docs: docsPath ? `${base}${docsPath}` : undefined,
         dbConnected,
-        console: web ? `${base}/  (${web.mode} → ${web.source})` : undefined,
+        console: web ? `${base}/admin  (${web.mode} → ${web.source})` : undefined,
         routes: [
             'GET   /health',
             'POST  /api/auth/*        (Better Auth — sign-in, session, OTP)',
             'POST  /v1/auth/register  GET /v1/auth/me',
             'GET   /v1/auth/me/settings',
-            ...(web ? ['GET   /*                 (admin console — ADMIN session required)'] : []),
+            ...(web
+                ? [
+                      'GET   /admin/login       (admin console — public)',
+                      'GET   /admin/*           (admin console — ADMIN session required)',
+                      'GET   /v1/admin/users    /audit  /caches',
+                  ]
+                : []),
         ],
     });
 }
@@ -137,8 +142,8 @@ function setupSwagger(app: NestExpressApplication): string | null {
 
     const path = '/docs';
     const config = new DocumentBuilder()
-        .setTitle('glowquest API')
-        .setDescription('Backend for the glowquest AI Career OS mobile app.')
+        .setTitle('Base App API')
+        .setDescription('Backend for the Base App mobile app.')
         .setVersion('1.0')
         .addBearerAuth()
         .build();

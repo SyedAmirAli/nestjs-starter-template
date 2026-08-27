@@ -1,4 +1,4 @@
-// glowquest — foundation schema.
+// base-app — foundation schema.
 //
 // Scope: exactly what the inherited modules need to run — auth (Better Auth's four tables),
 // account settings, the file lifecycle, the audit trail, and the AI cost ledger. Feature
@@ -52,7 +52,7 @@ model User {
   @@unique([email])
   @@index([isActive])
   @@index([deletedAt])
-  @@map("user")
+  @@map("users")
 }
 
 enum UserRole {
@@ -76,16 +76,18 @@ model Session {
   @@unique([token])
   @@index([userId])
   @@index([isActive])
-  @@map("session")
+  @@map("sessions")
 }
 
 model Account {
   id                    String    @id
+  issuer                String
   accountId             String
   providerId            String
   accessToken           String?
   refreshToken          String?
   idToken               String?
+  
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   /// Granted OAuth scopes. Load-bearing for the Gmail integration: sign-in asks only for
@@ -102,7 +104,7 @@ model Account {
 
   @@index([userId])
   @@index([providerId, accountId])
-  @@map("account")
+  @@map("accounts")
 }
 
 model Verification {
@@ -116,7 +118,7 @@ model Verification {
 
   @@index([identifier])
   @@index([expiresAt])
-  @@map("verification")
+  @@map("verifications")
 }
 
 // ============================================================================
@@ -189,7 +191,7 @@ model File {
   kind   FileKind
   status FileStatus @default(PENDING)
 
-  /// Full object key including the app prefix, e.g. `glowquest/users/<userId>/uploads/<uuid>.pdf`.
+  /// Full object key including the app prefix, e.g. `base-app/users/<userId>/uploads/<uuid>.pdf`.
   storageKey   String  @unique
   originalName String
   mimeType     String

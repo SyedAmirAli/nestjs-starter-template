@@ -52,7 +52,7 @@ multer itself and needs no adjustment. Covered by the boundary tests.
 
 ## nginx is the real outer bound
 
-`client_max_body_size` in `/etc/nginx/sites-available/api.glowquest.app` rejects
+`client_max_body_size` in `/etc/nginx/sites-available/api.base-app.app` rejects
 oversized bodies **before they reach Node**, so no app-level setting can widen it. Its
 default is 1 MB, which is what produced the original production 413 — invisible from
 the app, because the request never arrived.
@@ -76,7 +76,7 @@ Verify a change with a real request rather than by reading config:
 
 ```bash
 # expect anything except 413
-curl -i -X POST https://api.glowquest.app/v1/files \
+curl -i -X POST https://api.base-app.app/v1/files \
   -F "images=@large.jpg;type=image/jpeg"
 ```
 

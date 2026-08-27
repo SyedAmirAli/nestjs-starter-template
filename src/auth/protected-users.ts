@@ -14,11 +14,7 @@
  *
  * Fill in the real emails below. Matching is case-insensitive and trims whitespace.
  */
-const RAW_PROTECTED_EMAILS: ReadonlyArray<string> = [
-    // 'owner@glowquest.app',
-
-    'amirralli300400@gmail.com',
-];
+const RAW_PROTECTED_EMAILS: ReadonlyArray<string> = ['amirralli300400@gmail.com'];
 
 export const PROTECTED_USER_EMAILS: ReadonlyArray<string> = RAW_PROTECTED_EMAILS.map((email) =>
     email.trim().toLowerCase(),

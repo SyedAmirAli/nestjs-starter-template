@@ -1,14 +1,25 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { App as AntdApp, ConfigProvider } from 'antd'
 import './index.css'
-import App from './App.tsx'
 import { consoleTheme } from './theme.ts'
+import { routeTree } from './routeTree.gen'
+import { ADMIN_BASEPATH } from './lib/paths'
 
-// No `basename`: the console owns the root path, and the API lives under prefixes the
-// console is barred from claiming (src/web/reserved-paths.ts).
-//
+const router = createRouter({
+  routeTree,
+  basepath: ADMIN_BASEPATH,
+  defaultPreload: 'intent',
+  scrollRestoration: true,
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
 // `AntdApp` supplies the context that `message`, `notification` and `modal` need in order to
 // pick up the theme above. Calling them off the static import instead — `message.success()`
 // — renders them unthemed, which in a dark console means a white toast.
@@ -16,9 +27,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ConfigProvider theme={consoleTheme}>
       <AntdApp>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </AntdApp>
     </ConfigProvider>
   </StrictMode>,

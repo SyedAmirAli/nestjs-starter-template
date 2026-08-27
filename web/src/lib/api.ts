@@ -6,68 +6,86 @@
  * on its own — which is exactly why the console is co-hosted rather than deployed separately.
  */
 
+import { ADMIN_BASEPATH } from './paths';
+
 /** Matches the server's global prefix. See src/main.ts and src/web/reserved-paths.ts. */
-const API_PREFIX = '/v1'
+const API_PREFIX = '/v1';
 
 /** The error envelope every failing endpoint returns (src/common/errors/api-error.types.ts). */
 interface ApiErrorBody {
-  message?: string
-  code?: string | null
+    message?: string;
+    code?: string | null;
 }
 
 export class ApiError extends Error {
-  readonly status: number
-  readonly code: string | null
+    readonly status: number;
+    readonly code: string | null;
 
-  constructor(message: string, status: number, code: string | null) {
-    super(message)
-    this.name = 'ApiError'
-    this.status = status
-    this.code = code
-  }
+    constructor(message: string, status: number, code: string | null) {
+        super(message);
+        this.name = 'ApiError';
+        this.status = status;
+        this.code = code;
+    }
 }
 
 /**
  * A 401 means the session died mid-visit — expired, revoked, or signed out in another tab.
- * The sign-in form lives on the server side of the admin gate, not in this bundle, so the
- * only way back to it is a full reload.
+ * Send the browser to the public login route rather than reloading the protected page, which
+ * would only bounce through the server gate and land in the same place.
  *
- * Rate-limited because a 401 that survives the reload (a bug, or an admin whose role was
+ * Rate-limited because a 401 that survives the redirect (a bug, or an admin whose role was
  * revoked while the cookie stayed valid) would otherwise spin the browser indefinitely.
  */
-const RELOAD_COOLDOWN_MS = 10_000
-const RELOAD_KEY = 'glowquest:gate-reload-at'
+const REDIRECT_COOLDOWN_MS = 10_000;
+const REDIRECT_KEY = 'base-app:login-redirect-at';
 
-function reloadIntoGate(): void {
-  const last = Number(sessionStorage.getItem(RELOAD_KEY) ?? 0)
-  if (Date.now() - last < RELOAD_COOLDOWN_MS) return
+function redirectToLogin(): void {
+    const loginPath = `${ADMIN_BASEPATH}/login`;
+    if (window.location.pathname === loginPath || window.location.pathname === `${loginPath}/`) return;
 
-  sessionStorage.setItem(RELOAD_KEY, String(Date.now()))
-  window.location.reload()
+    const last = Number(sessionStorage.getItem(REDIRECT_KEY) ?? 0);
+    if (Date.now() - last < REDIRECT_COOLDOWN_MS) return;
+
+    sessionStorage.setItem(REDIRECT_KEY, String(Date.now()));
+
+    const next = `${window.location.pathname}${window.location.search}`;
+    const url =
+        next.startsWith(ADMIN_BASEPATH) && next !== loginPath
+            ? `${loginPath}?redirect=${encodeURIComponent(next)}`
+            : loginPath;
+    window.location.assign(url);
 }
 
-export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_PREFIX}${path}`, {
-    ...init,
-    credentials: 'same-origin',
-    headers: { accept: 'application/json', ...init?.headers },
-  })
+export type ApiFetchInit = RequestInit & {
+    /** Skip the 401 → login redirect. Used by the session probe on public routes. */
+    skipAuthRedirect?: boolean;
+};
 
-  if (response.status === 401) {
-    reloadIntoGate()
-    throw new ApiError('Your session has expired.', 401, 'UNAUTHENTICATED')
-  }
+export async function apiFetch<T>(path: string, init?: ApiFetchInit): Promise<T> {
+    const { skipAuthRedirect, ...fetchInit } = init ?? {};
 
-  // 204, and any response that simply has no body to read.
-  const text = await response.text()
-  const body: unknown = text ? JSON.parse(text) : null
+    const response = await fetch(`${API_PREFIX}${path}`, {
+        ...fetchInit,
+        credentials: 'same-origin',
+        headers: { accept: 'application/json', ...fetchInit.headers },
+    });
 
-  if (!response.ok) {
-    const { message, code } = (body ?? {}) as ApiErrorBody
-    throw new ApiError(message ?? `Request failed (${response.status})`, response.status, code ?? null)
-  }
+    if (response.status === 401) {
+        if (!skipAuthRedirect) redirectToLogin();
+        throw new ApiError('Your session has expired.', 401, 'UNAUTHENTICATED');
+    }
 
-  return body as T
+    // 204, and any response that simply has no body to read.
+    const text = await response.text();
+    const body: unknown = text ? JSON.parse(text) : null;
+
+    if (!response.ok) {
+        const { message, code } = (body ?? {}) as ApiErrorBody;
+        throw new ApiError(message ?? `Request failed (${response.status})`, response.status, code ?? null);
+    }
+
+    return body as T;
 }
 
 /**
@@ -75,8 +93,39 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
  * API versions — hence the bare fetch rather than `apiFetch`.
  */
 export async function fetchHealth(): Promise<{ status: string; name: string; env: string; at: string }> {
-  const response = await fetch('/health', { headers: { accept: 'application/json' } })
-  if (!response.ok) throw new ApiError(`Health check failed (${response.status})`, response.status, null)
+    const response = await fetch('/health', { headers: { accept: 'application/json' } });
+    if (!response.ok) throw new ApiError(`Health check failed (${response.status})`, response.status, null);
 
-  return response.json() as Promise<{ status: string; name: string; env: string; at: string }>
+    return response.json() as Promise<{ status: string; name: string; env: string; at: string }>;
+}
+
+export function isApiError(error: unknown): error is ApiError {
+    return error instanceof ApiError;
+}
+
+/** Drop empty/undefined values so a filter that means "both" is simply omitted. */
+export function toQuery(params: Record<string, unknown>): string {
+    const search = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+        if (value === undefined || value === null || value === '') continue;
+        search.set(key, String(value));
+    }
+    const encoded = search.toString();
+    return encoded ? `?${encoded}` : '';
+}
+
+/** Mutating endpoints wrap the payload in `{ message, localeKey, status, data }`. GET does not. */
+export interface MutationEnvelope<T> {
+    message: string;
+    localeKey: string | null;
+    status: string;
+    data: T;
+}
+
+export async function apiMutate<T>(path: string, init?: ApiFetchInit): Promise<{ message: string; data: T }> {
+    const body = await apiFetch<MutationEnvelope<T>>(path, {
+        ...init,
+        headers: { 'content-type': 'application/json', ...init?.headers },
+    });
+    return { message: body.message, data: body.data };
 }

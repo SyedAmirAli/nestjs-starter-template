@@ -60,7 +60,7 @@ export type ObjectHead = {
 @Injectable()
 export class StorageService {
     private readonly bucket = S3_BUCKET;
-    /** Shared-bucket namespace — every object key is rooted here (default: `glowquest`). */
+    /** Shared-bucket namespace — every object key is rooted here (default: `base-app`). */
     readonly prefix = S3_PREFIX;
 
     /** Built once and reused: an S3Client holds a connection pool, so per-call construction
@@ -93,7 +93,7 @@ export class StorageService {
 
     /**
      * Ensures every object key lives under the app prefix inside the (possibly shared) bucket.
-     * Idempotent — keys that already start with `glowquest/` are left unchanged, so it is safe
+     * Idempotent — keys that already start with `base-app/` are left unchanged, so it is safe
      * to call on a key read back out of the database.
      */
     resolveKey(key: string): string {
@@ -108,7 +108,7 @@ export class StorageService {
     /**
      * Builds a collision-resistant object key under a user's own prefix.
      *
-     * e.g. `userKey(userId, 'uploads', 'pdf')` -> `glowquest/users/<userId>/uploads/<uuid>.pdf`
+     * e.g. `userKey(userId, 'uploads', 'pdf')` -> `base-app/users/<userId>/uploads/<uuid>.pdf`
      *
      * The `users/{userId}/` segment is the whole point: deleting an account is then one
      * prefix delete, with no way to miss an object because a table forgot to reference it.
