@@ -57,7 +57,7 @@ export class UserService {
             qb.with(LIST_INCLUDE);
         }
 
-        return qb.paginate({ page, columns: select, limit, baseUrl });
+        return qb.paginate({ page, columns: select as Array<keyof User>, limit, baseUrl });
     }
 
     /** Soft-deleted accounts — the Account delete screen. */
@@ -73,7 +73,7 @@ export class UserService {
             qb.with(LIST_INCLUDE);
         }
 
-        return qb.paginate({ page, columns: select, limit, baseUrl });
+        return qb.paginate({ page, columns: select as Array<keyof User>, limit, baseUrl });
     }
 
     async findOne(id: string) {

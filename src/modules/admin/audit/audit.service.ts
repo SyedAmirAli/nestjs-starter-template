@@ -80,7 +80,7 @@ export class AuditService {
         if (toDate) qb.where('createdAt', '<=', new Date(toDate));
         if (search) qb.search(search, ['summary', 'resource', 'resourceId', 'actorEmail', 'actorId']);
 
-        return qb.paginate({ page, limit, baseUrl, columns: select });
+        return qb.paginate({ page, limit, baseUrl, columns: select as Array<keyof AuditLog> });
     }
 
     async findOne(id: string) {
