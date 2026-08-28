@@ -1,0 +1,1434 @@
+[
+    {
+        "code": "ab",
+        "name": "Abkhaz",
+        "nativeName": "аҧсуа бызшәа",
+        "countryCode": "GE",
+        "countryId": "019f34fa-83c0-74fb-8a8a-de6c55aae793",
+        "emoji": "🇬🇪"
+    },
+    {
+        "code": "aa",
+        "name": "Afar",
+        "nativeName": "Afaraf",
+        "countryCode": "ET",
+        "countryId": "019f34fa-83b2-749f-ae3d-9cd2e2b38bc7",
+        "emoji": "🇪🇹"
+    },
+    {
+        "code": "af",
+        "name": "Afrikaans",
+        "nativeName": "Afrikaans",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    },
+    {
+        "code": "ak",
+        "name": "Akan",
+        "nativeName": "Akan",
+        "countryCode": "GH",
+        "countryId": "019f34fa-83c3-71d2-a674-e43026618acb",
+        "emoji": "🇬🇭"
+    },
+    {
+        "code": "sq",
+        "name": "Albanian",
+        "nativeName": "Shqip",
+        "countryCode": "AL",
+        "countryId": "019f34fa-833f-7208-a428-2df583f1f90c",
+        "emoji": "🇦🇱"
+    },
+    {
+        "code": "am",
+        "name": "Amharic",
+        "nativeName": "አማርኛ",
+        "countryCode": "ET",
+        "countryId": "019f34fa-83b2-749f-ae3d-9cd2e2b38bc7",
+        "emoji": "🇪🇹"
+    },
+    {
+        "code": "ar",
+        "name": "Arabic",
+        "nativeName": "العربية",
+        "countryCode": "AE",
+        "countryId": "019f34fa-8486-748e-8e92-1b6a51dbe3dd",
+        "emoji": "🇦🇪"
+    },
+    {
+        "code": "an",
+        "name": "Aragonese",
+        "nativeName": "aragonés",
+        "countryCode": "ES",
+        "countryId": "019f34fa-8466-756b-8d26-d46f6b05940e",
+        "emoji": "🇪🇸"
+    },
+    {
+        "code": "hy",
+        "name": "Armenian",
+        "nativeName": "Հայերեն",
+        "countryCode": "AM",
+        "countryId": "019f34fa-8354-743a-9ac6-8adca88a18ad",
+        "emoji": "🇦🇲"
+    },
+    {
+        "code": "as",
+        "name": "Assamese",
+        "nativeName": "অসমীয়া",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "av",
+        "name": "Avaric",
+        "nativeName": "авар мацӀ",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "ae",
+        "name": "Avestan",
+        "nativeName": "avesta",
+        "countryCode": "IR",
+        "countryId": "019f34fa-83db-73df-a483-1792d8da7811",
+        "emoji": "🇮🇷"
+    },
+    {
+        "code": "ay",
+        "name": "Aymara",
+        "nativeName": "aymar aru",
+        "countryCode": "BO",
+        "countryId": "019f34fa-836f-7262-88e2-1764e179c5fe",
+        "emoji": "🇧🇴"
+    },
+    {
+        "code": "az",
+        "name": "Azerbaijani",
+        "nativeName": "azərbaycan dili",
+        "countryCode": "AZ",
+        "countryId": "019f34fa-835b-756c-a84a-912ec91b51ff",
+        "emoji": "🇦🇿"
+    },
+    {
+        "code": "bm",
+        "name": "Bambara",
+        "nativeName": "bamanankan",
+        "countryCode": "ML",
+        "countryId": "019f34fa-840a-748a-8835-37ab5dcc2803",
+        "emoji": "🇲🇱"
+    },
+    {
+        "code": "ba",
+        "name": "Bashkir",
+        "nativeName": "башҡорт теле",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "eu",
+        "name": "Basque",
+        "nativeName": "euskara",
+        "countryCode": "ES",
+        "countryId": "019f34fa-8466-756b-8d26-d46f6b05940e",
+        "emoji": "🇪🇸"
+    },
+    {
+        "code": "be",
+        "name": "Belarusian",
+        "nativeName": "беларуская мова",
+        "countryCode": "BY",
+        "countryId": "019f34fa-8362-705c-b86f-8404a56adbda",
+        "emoji": "🇧🇾"
+    },
+    {
+        "code": "bn",
+        "name": "Bengali",
+        "nativeName": "বাংলা",
+        "countryCode": "BD",
+        "countryId": "019f34fa-835f-75de-bfff-99ed1ca5adbf",
+        "emoji": "🇧🇩"
+    },
+    {
+        "code": "bi",
+        "name": "Bislama",
+        "nativeName": "Bislama",
+        "countryCode": "VU",
+        "countryId": "019f34fa-848c-76e1-b086-a7410d0a6315",
+        "emoji": "🇻🇺"
+    },
+    {
+        "code": "bs",
+        "name": "Bosnian",
+        "nativeName": "bosanski jezik",
+        "countryCode": "BA",
+        "countryId": "019f34fa-8373-720a-ad18-778e82b122df",
+        "emoji": "🇧🇦"
+    },
+    {
+        "code": "br",
+        "name": "Breton",
+        "nativeName": "brezhoneg",
+        "countryCode": "FR",
+        "countryId": "019f34fa-83bb-7634-9efb-5213b4629dd1",
+        "emoji": "🇫🇷"
+    },
+    {
+        "code": "bg",
+        "name": "Bulgarian",
+        "nativeName": "български език",
+        "countryCode": "BG",
+        "countryId": "019f34fa-837a-74de-b775-1bacd78d11b9",
+        "emoji": "🇧🇬"
+    },
+    {
+        "code": "my",
+        "name": "Burmese",
+        "nativeName": "ဗမာစာ",
+        "countryCode": "MM",
+        "countryId": "019f34fa-8421-74f9-b409-ee067f6c3c99",
+        "emoji": "🇲🇲"
+    },
+    {
+        "code": "ca",
+        "name": "Catalan",
+        "nativeName": "Català",
+        "countryCode": "AD",
+        "countryId": "019f34fa-8347-772b-8042-3ba97e0973ca",
+        "emoji": "🇦🇩"
+    },
+    {
+        "code": "ch",
+        "name": "Chamorro",
+        "nativeName": "Chamoru",
+        "countryCode": "GU",
+        "countryId": "019f34fa-83c9-72da-8f21-f9986ca0d9aa",
+        "emoji": "🇬🇺"
+    },
+    {
+        "code": "ce",
+        "name": "Chechen",
+        "nativeName": "нохчийн мотт",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "ny",
+        "name": "Chichewa",
+        "nativeName": "chiCheŵa",
+        "countryCode": "MW",
+        "countryId": "019f34fa-8407-7558-af8e-ba79feb6b54b",
+        "emoji": "🇲🇼"
+    },
+    {
+        "code": "zh",
+        "name": "Chinese",
+        "nativeName": "中文",
+        "countryCode": "CN",
+        "countryId": "019f34fa-838d-734d-a9ea-fbe42716a37b",
+        "emoji": "🇨🇳"
+    },
+    {
+        "code": "cv",
+        "name": "Chuvash",
+        "nativeName": "чӑваш чӗлхи",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "kw",
+        "name": "Cornish",
+        "nativeName": "Kernewek",
+        "countryCode": "GB",
+        "countryId": "019f34fa-8487-7756-9064-0c0bc1a3cdf5",
+        "emoji": "🇬🇧"
+    },
+    {
+        "code": "co",
+        "name": "Corsican",
+        "nativeName": "corsu",
+        "countryCode": "FR",
+        "countryId": "019f34fa-83bb-7634-9efb-5213b4629dd1",
+        "emoji": "🇫🇷"
+    },
+    {
+        "code": "cr",
+        "name": "Cree",
+        "nativeName": "ᓀᐦᐃᔭᐍᐏᐣ",
+        "countryCode": "CA",
+        "countryId": "019f34fa-8383-77e0-b0d5-b8508460152c",
+        "emoji": "🇨🇦"
+    },
+    {
+        "code": "hr",
+        "name": "Croatian",
+        "nativeName": "Hrvatski",
+        "countryCode": "HR",
+        "countryId": "019f34fa-8398-73ca-a2f5-9cd40ad4347b",
+        "emoji": "🇭🇷"
+    },
+    {
+        "code": "cs",
+        "name": "Czech",
+        "nativeName": "Čeština",
+        "countryCode": "CZ",
+        "countryId": "019f34fa-839e-77fd-b209-dcabdd7c27c5",
+        "emoji": "🇨🇿"
+    },
+    {
+        "code": "da",
+        "name": "Danish",
+        "nativeName": "Dansk",
+        "countryCode": "DK",
+        "countryId": "019f34fa-839f-770e-b3fc-de969a93a339",
+        "emoji": "🇩🇰"
+    },
+    {
+        "code": "dv",
+        "name": "Divehi",
+        "nativeName": "ދިވެހި",
+        "countryCode": "MV",
+        "countryId": "019f34fa-8409-748f-9ccc-d8dd55879002",
+        "emoji": "🇲🇻"
+    },
+    {
+        "code": "nl",
+        "name": "Dutch",
+        "nativeName": "Nederlands",
+        "countryCode": "AW",
+        "countryId": "019f34fa-8355-7379-b2f6-3ebaddfd1117",
+        "emoji": "🇦🇼"
+    },
+    {
+        "code": "dz",
+        "name": "Dzongkha",
+        "nativeName": "རྫོང་ཁ",
+        "countryCode": "BT",
+        "countryId": "019f34fa-836c-72f4-8812-1a64c4563940",
+        "emoji": "🇧🇹"
+    },
+    {
+        "code": "en",
+        "name": "English",
+        "nativeName": "English",
+        "countryCode": "AG",
+        "countryId": "019f34fa-8350-765d-b7d1-fa44313925c9",
+        "emoji": "🇦🇬"
+    },
+    {
+        "code": "et",
+        "name": "Estonian",
+        "nativeName": "eesti",
+        "countryCode": "EE",
+        "countryId": "019f34fa-83b0-71f3-8cc0-16825476c0ce",
+        "emoji": "🇪🇪"
+    },
+    {
+        "code": "ee",
+        "name": "Ewe",
+        "nativeName": "Eʋegbe",
+        "countryCode": "GH",
+        "countryId": "019f34fa-83c3-71d2-a674-e43026618acb",
+        "emoji": "🇬🇭"
+    },
+    {
+        "code": "fo",
+        "name": "Faroese",
+        "nativeName": "Føroyskt",
+        "countryCode": "FO",
+        "countryId": "019f34fa-83b6-73fb-a49b-79d27899d06c",
+        "emoji": "🇫🇴"
+    },
+    {
+        "code": "fj",
+        "name": "Fijian",
+        "nativeName": "vosa Vakaviti",
+        "countryCode": "FJ",
+        "countryId": "019f34fa-83b7-7691-b06b-c2c1686dbf79",
+        "emoji": "🇫🇯"
+    },
+    {
+        "code": "fi",
+        "name": "Finnish",
+        "nativeName": "suomi",
+        "countryCode": "FI",
+        "countryId": "019f34fa-83b9-743d-ab59-27f1a4e125ad",
+        "emoji": "🇫🇮"
+    },
+    {
+        "code": "fr",
+        "name": "French",
+        "nativeName": "Français",
+        "countryCode": "BJ",
+        "countryId": "019f34fa-8368-75dd-adfa-74277538f773",
+        "emoji": "🇧🇯"
+    },
+    {
+        "code": "ff",
+        "name": "Fula",
+        "nativeName": "Fulfulde",
+        "countryCode": "BF",
+        "countryId": "019f34fa-837c-764b-8f45-e3a7ca9d6353",
+        "emoji": "🇧🇫"
+    },
+    {
+        "code": "gl",
+        "name": "Galician",
+        "nativeName": "galego",
+        "countryCode": "ES",
+        "countryId": "019f34fa-8466-756b-8d26-d46f6b05940e",
+        "emoji": "🇪🇸"
+    },
+    {
+        "code": "lg",
+        "name": "Ganda",
+        "nativeName": "Luganda",
+        "countryCode": "UG",
+        "countryId": "019f34fa-8483-750a-9234-b6a070e4b35b",
+        "emoji": "🇺🇬"
+    },
+    {
+        "code": "ka",
+        "name": "Georgian",
+        "nativeName": "ქართული",
+        "countryCode": "GE",
+        "countryId": "019f34fa-83c0-74fb-8a8a-de6c55aae793",
+        "emoji": "🇬🇪"
+    },
+    {
+        "code": "de",
+        "name": "German",
+        "nativeName": "Deutsch",
+        "countryCode": "AT",
+        "countryId": "019f34fa-8359-735b-8b68-2411fd860494",
+        "emoji": "🇦🇹"
+    },
+    {
+        "code": "el",
+        "name": "Greek",
+        "nativeName": "Ελληνικά",
+        "countryCode": "CY",
+        "countryId": "019f34fa-839c-7230-b199-2cd1368ae421",
+        "emoji": "🇨🇾"
+    },
+    {
+        "code": "gn",
+        "name": "Guaraní",
+        "nativeName": "Avañe'ẽ",
+        "countryCode": "AR",
+        "countryId": "019f34fa-8352-7312-a424-efb95cb81db7",
+        "emoji": "🇦🇷"
+    },
+    {
+        "code": "gu",
+        "name": "Gujarati",
+        "nativeName": "ગુજરાતી",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "ht",
+        "name": "Haitian",
+        "nativeName": "Kreyòl ayisyen",
+        "countryCode": "HT",
+        "countryId": "019f34fa-83d1-74fc-af6c-2f135619aa81",
+        "emoji": "🇭🇹"
+    },
+    {
+        "code": "ha",
+        "name": "Hausa",
+        "nativeName": "هَوُسَ",
+        "countryCode": "NG",
+        "countryId": "019f34fa-842c-76a5-bad4-75e4422afac7",
+        "emoji": "🇳🇬"
+    },
+    {
+        "code": "he",
+        "name": "Hebrew",
+        "nativeName": "עברית",
+        "countryCode": "IL",
+        "countryId": "019f34fa-83df-7695-bc4a-753f5c2f015f",
+        "emoji": "🇮🇱"
+    },
+    {
+        "code": "hz",
+        "name": "Herero",
+        "nativeName": "Otjiherero",
+        "countryCode": "NA",
+        "countryId": "019f34fa-8422-759e-9c98-2d6504b6d169",
+        "emoji": "🇳🇦"
+    },
+    {
+        "code": "hi",
+        "name": "Hindi",
+        "nativeName": "हिन्दी",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "ho",
+        "name": "Hiri Motu",
+        "nativeName": "Hiri Motu",
+        "countryCode": "TO",
+        "countryId": "019f34fa-847b-754a-8c84-f7158e985a15",
+        "emoji": "🇹🇴"
+    },
+    {
+        "code": "hu",
+        "name": "Hungarian",
+        "nativeName": "magyar",
+        "countryCode": "HU",
+        "countryId": "019f34fa-83d5-70ac-8f0a-564fd569dd36",
+        "emoji": "🇭🇺"
+    },
+    {
+        "code": "is",
+        "name": "Icelandic",
+        "nativeName": "Íslenska",
+        "countryCode": "IS",
+        "countryId": "019f34fa-83d7-73d0-9208-4d77c6b90772",
+        "emoji": "🇮🇸"
+    },
+    {
+        "code": "ig",
+        "name": "Igbo",
+        "nativeName": "Asụsụ Igbo",
+        "countryCode": "NG",
+        "countryId": "019f34fa-842c-76a5-bad4-75e4422afac7",
+        "emoji": "🇳🇬"
+    },
+    {
+        "code": "id",
+        "name": "Indonesian",
+        "nativeName": "Bahasa Indonesia",
+        "countryCode": "ID",
+        "countryId": "019f34fa-83d9-72ff-982a-5104ecc2acfa",
+        "emoji": "🇮🇩"
+    },
+    {
+        "code": "iu",
+        "name": "Inuktitut",
+        "nativeName": "ᐃᓄᒃᑎᑐᑦ",
+        "countryCode": "CA",
+        "countryId": "019f34fa-8383-77e0-b0d5-b8508460152c",
+        "emoji": "🇨🇦"
+    },
+    {
+        "code": "ik",
+        "name": "Inupiaq",
+        "nativeName": "Iñupiaq",
+        "countryCode": "US",
+        "countryId": "019f34fa-8488-74fc-bab1-f64c1d356cd2",
+        "emoji": "🇺🇸"
+    },
+    {
+        "code": "ga",
+        "name": "Irish",
+        "nativeName": "Gaeilge",
+        "countryCode": "IE",
+        "countryId": "019f34fa-83de-7385-8ed5-c8cb1e0c473b",
+        "emoji": "🇮🇪"
+    },
+    {
+        "code": "it",
+        "name": "Italian",
+        "nativeName": "Italiano",
+        "countryCode": "IT",
+        "countryId": "019f34fa-83e0-77e9-aca4-ecb05802973f",
+        "emoji": "🇮🇹"
+    },
+    {
+        "code": "ja",
+        "name": "Japanese",
+        "nativeName": "日本語",
+        "countryCode": "JM",
+        "countryId": "019f34fa-83e3-77b9-8a7c-35886867194f",
+        "emoji": "🇯🇲"
+    },
+    {
+        "code": "jv",
+        "name": "Javanese",
+        "nativeName": "basa Jawa",
+        "countryCode": "ID",
+        "countryId": "019f34fa-83d9-72ff-982a-5104ecc2acfa",
+        "emoji": "🇮🇩"
+    },
+    {
+        "code": "kl",
+        "name": "Kalaallisut",
+        "nativeName": "kalaallisut",
+        "countryCode": "GL",
+        "countryId": "019f34fa-83c7-7029-a3e7-9c85bb5ec327",
+        "emoji": "🇬🇱"
+    },
+    {
+        "code": "kn",
+        "name": "Kannada",
+        "nativeName": "ಕನ್ನಡ",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "kr",
+        "name": "Kanuri",
+        "nativeName": "Kanuri",
+        "countryCode": "NE",
+        "countryId": "019f34fa-842b-76be-ae55-b0da6371a9cb",
+        "emoji": "🇳🇪"
+    },
+    {
+        "code": "ks",
+        "name": "Kashmiri",
+        "nativeName": "कश्मीरी",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "kk",
+        "name": "Kazakh",
+        "nativeName": "қазақ тілі",
+        "countryCode": "KZ",
+        "countryId": "019f34fa-83e7-738d-9e40-ace6b7c353aa",
+        "emoji": "🇰🇿"
+    },
+    {
+        "code": "km",
+        "name": "Khmer",
+        "nativeName": "ខេមរភាសា",
+        "countryCode": "KH",
+        "countryId": "019f34fa-837f-756e-a66f-78302cd82ae0",
+        "emoji": "🇰🇭"
+    },
+    {
+        "code": "ki",
+        "name": "Kikuyu",
+        "nativeName": "Gĩkũyũ",
+        "countryCode": "KE",
+        "countryId": "019f34fa-83ea-72df-a25c-6b56f1af148a",
+        "emoji": "🇰🇪"
+    },
+    {
+        "code": "rw",
+        "name": "Kinyarwanda",
+        "nativeName": "Ikinyarwanda",
+        "countryCode": "RW",
+        "countryId": "019f34fa-8446-736b-87c4-2f02495d35ed",
+        "emoji": "🇷🇼"
+    },
+    {
+        "code": "rn",
+        "name": "Kirundi",
+        "nativeName": "Ikirundi",
+        "countryCode": "BI",
+        "countryId": "019f34fa-837e-74ab-b612-db86f5b05a20",
+        "emoji": "🇧🇮"
+    },
+    {
+        "code": "kv",
+        "name": "Komi",
+        "nativeName": "коми кыв",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "kg",
+        "name": "Kongo",
+        "nativeName": "Kikongo",
+        "countryCode": "CD",
+        "countryId": "019f34fa-8394-7679-b1fc-3618a1dcd32d",
+        "emoji": "🇨🇩"
+    },
+    {
+        "code": "ko",
+        "name": "Korean",
+        "nativeName": "한국어",
+        "countryCode": "KP",
+        "countryId": "019f34fa-842f-7656-94be-2dde51b4b7d2",
+        "emoji": "🇰🇵"
+    },
+    {
+        "code": "ku",
+        "name": "Kurdish",
+        "nativeName": "Kurdî",
+        "countryCode": "TR",
+        "countryId": "019f34fa-847e-730a-a000-a90eeb80dfe9",
+        "emoji": "🇹🇷"
+    },
+    {
+        "code": "kj",
+        "name": "Kwanyama",
+        "nativeName": "Kuanyama",
+        "countryCode": "NA",
+        "countryId": "019f34fa-8422-759e-9c98-2d6504b6d169",
+        "emoji": "🇳🇦"
+    },
+    {
+        "code": "ky",
+        "name": "Kyrgyz",
+        "nativeName": "Кыргызча",
+        "countryCode": "KG",
+        "countryId": "019f34fa-83f1-7358-9e1d-ab6f8c2ac367",
+        "emoji": "🇰🇬"
+    },
+    {
+        "code": "lo",
+        "name": "Lao",
+        "nativeName": "ພາສາລາວ",
+        "countryCode": "LA",
+        "countryId": "019f34fa-83f3-7458-9703-b4ca6180cf96",
+        "emoji": "🇱🇦"
+    },
+    {
+        "code": "la",
+        "name": "Latin",
+        "nativeName": "latine",
+        "countryCode": "VA",
+        "countryId": "019f34fa-848e-760f-91b9-88a9c5cbe7a3",
+        "emoji": "🇻🇦"
+    },
+    {
+        "code": "lv",
+        "name": "Latvian",
+        "nativeName": "latviešu valoda",
+        "countryCode": "LV",
+        "countryId": "019f34fa-83f5-7619-a5f8-d682c719ab84",
+        "emoji": "🇱🇻"
+    },
+    {
+        "code": "li",
+        "name": "Limburgish",
+        "nativeName": "Limburgs",
+        "countryCode": "NL",
+        "countryId": "019f34fa-8426-7280-a963-7ac0456be4f2",
+        "emoji": "🇳🇱"
+    },
+    {
+        "code": "ln",
+        "name": "Lingala",
+        "nativeName": "Lingála",
+        "countryCode": "CD",
+        "countryId": "019f34fa-8394-7679-b1fc-3618a1dcd32d",
+        "emoji": "🇨🇩"
+    },
+    {
+        "code": "lt",
+        "name": "Lithuanian",
+        "nativeName": "lietuvių kalba",
+        "countryCode": "LT",
+        "countryId": "019f34fa-83ff-7561-8c06-fc03a0a03e1d",
+        "emoji": "🇱🇹"
+    },
+    {
+        "code": "lu",
+        "name": "Luba-Katanga",
+        "nativeName": "Kiluba",
+        "countryCode": "CD",
+        "countryId": "019f34fa-8394-7679-b1fc-3618a1dcd32d",
+        "emoji": "🇨🇩"
+    },
+    {
+        "code": "lb",
+        "name": "Luxembourgish",
+        "nativeName": "Lëtzebuergesch",
+        "countryCode": "LU",
+        "countryId": "019f34fa-8401-70fa-b1bb-a2fe81189103",
+        "emoji": "🇱🇺"
+    },
+    {
+        "code": "mk",
+        "name": "Macedonian",
+        "nativeName": "македонски јазик",
+        "countryCode": "MK",
+        "countryId": "019f34fa-8404-75eb-80b1-97e57b28ae32",
+        "emoji": "🇲🇰"
+    },
+    {
+        "code": "mg",
+        "name": "Malagasy",
+        "nativeName": "fiteny malagasy",
+        "countryCode": "MG",
+        "countryId": "019f34fa-8405-7028-a9c5-b7b2eb356be1",
+        "emoji": "🇲🇬"
+    },
+    {
+        "code": "ms",
+        "name": "Malay",
+        "nativeName": "Bahasa Melayu",
+        "countryCode": "BN",
+        "countryId": "019f34fa-8378-77f9-866e-2f1657600752",
+        "emoji": "🇧🇳"
+    },
+    {
+        "code": "ml",
+        "name": "Malayalam",
+        "nativeName": "മലയാളം",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "mt",
+        "name": "Maltese",
+        "nativeName": "Malti",
+        "countryCode": "MT",
+        "countryId": "019f34fa-840c-77a2-8273-fa321a72ef7a",
+        "emoji": "🇲🇹"
+    },
+    {
+        "code": "gv",
+        "name": "Manx",
+        "nativeName": "Gaelg",
+        "countryCode": "GB",
+        "countryId": "019f34fa-8487-7756-9064-0c0bc1a3cdf5",
+        "emoji": "🇬🇧"
+    },
+    {
+        "code": "mi",
+        "name": "Māori",
+        "nativeName": "te reo Māori",
+        "countryCode": "NZ",
+        "countryId": "019f34fa-8428-7531-9e9d-b79d709f8ba8",
+        "emoji": "🇳🇿"
+    },
+    {
+        "code": "mr",
+        "name": "Marathi",
+        "nativeName": "मराठी",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "mh",
+        "name": "Marshallese",
+        "nativeName": "Kajin M̧ajeļ",
+        "countryCode": "MH",
+        "countryId": "019f34fa-840d-761c-9b63-29dcfd02034c",
+        "emoji": "🇲🇭"
+    },
+    {
+        "code": "mn",
+        "name": "Mongolian",
+        "nativeName": "Монгол хэл",
+        "countryCode": "MN",
+        "countryId": "019f34fa-8419-75cb-abe2-52328cd3ceef",
+        "emoji": "🇲🇳"
+    },
+    {
+        "code": "na",
+        "name": "Nauru",
+        "nativeName": "Dorerin Naoero",
+        "countryCode": "NR",
+        "countryId": "019f34fa-8423-72bc-9156-bd9bd46a1248",
+        "emoji": "🇳🇷"
+    },
+    {
+        "code": "nv",
+        "name": "Navajo",
+        "nativeName": "Diné bizaad",
+        "countryCode": "US",
+        "countryId": "019f34fa-8488-74fc-bab1-f64c1d356cd2",
+        "emoji": "🇺🇸"
+    },
+    {
+        "code": "ng",
+        "name": "Ndonga",
+        "nativeName": "Owambo",
+        "countryCode": "NA",
+        "countryId": "019f34fa-8422-759e-9c98-2d6504b6d169",
+        "emoji": "🇳🇦"
+    },
+    {
+        "code": "ne",
+        "name": "Nepali",
+        "nativeName": "नेपाली",
+        "countryCode": "NP",
+        "countryId": "019f34fa-8425-77c3-8afe-28f358fc5239",
+        "emoji": "🇳🇵"
+    },
+    {
+        "code": "nd",
+        "name": "Northern Ndebele",
+        "nativeName": "isiNdebele",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    },
+    {
+        "code": "se",
+        "name": "Northern Sami",
+        "nativeName": "Davvisámegiella",
+        "countryCode": "NO",
+        "countryId": "019f34fa-8430-77c9-9431-0dfd0528af33",
+        "emoji": "🇳🇴"
+    },
+    {
+        "code": "no",
+        "name": "Norwegian",
+        "nativeName": "Norsk",
+        "countryCode": "NO",
+        "countryId": "019f34fa-8430-77c9-9431-0dfd0528af33",
+        "emoji": "🇳🇴"
+    },
+    {
+        "code": "nb",
+        "name": "Norwegian Bokmål",
+        "nativeName": "Norsk bokmål",
+        "countryCode": "NO",
+        "countryId": "019f34fa-8430-77c9-9431-0dfd0528af33",
+        "emoji": "🇳🇴"
+    },
+    {
+        "code": "nn",
+        "name": "Norwegian Nynorsk",
+        "nativeName": "Norsk nynorsk",
+        "countryCode": "NO",
+        "countryId": "019f34fa-8430-77c9-9431-0dfd0528af33",
+        "emoji": "🇳🇴"
+    },
+    {
+        "code": "ii",
+        "name": "Nuosu",
+        "nativeName": "ꆈꌠ꒿ Nuosuhxop",
+        "countryCode": "CN",
+        "countryId": "019f34fa-838d-734d-a9ea-fbe42716a37b",
+        "emoji": "🇨🇳"
+    },
+    {
+        "code": "oc",
+        "name": "Occitan",
+        "nativeName": "occitan",
+        "countryCode": "FR",
+        "countryId": "019f34fa-83bb-7634-9efb-5213b4629dd1",
+        "emoji": "🇫🇷"
+    },
+    {
+        "code": "oj",
+        "name": "Ojibwe",
+        "nativeName": "ᐊᓂᔑᓈᐯᒧᐎᓐ",
+        "countryCode": "US",
+        "countryId": "019f34fa-8488-74fc-bab1-f64c1d356cd2",
+        "emoji": "🇺🇸"
+    },
+    {
+        "code": "cu",
+        "name": "Old Church Slavonic",
+        "nativeName": "ѩзыкъ словѣньскъ",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "or",
+        "name": "Oriya",
+        "nativeName": "ଓଡ଼ିଆ",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "om",
+        "name": "Oromo",
+        "nativeName": "Afaan Oromoo",
+        "countryCode": "ET",
+        "countryId": "019f34fa-83b2-749f-ae3d-9cd2e2b38bc7",
+        "emoji": "🇪🇹"
+    },
+    {
+        "code": "os",
+        "name": "Ossetian",
+        "nativeName": "ирон æвзаг",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "pi",
+        "name": "Pāli",
+        "nativeName": "पाऴि",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "pa",
+        "name": "Panjabi",
+        "nativeName": "ਪੰਜਾਬੀ",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "ps",
+        "name": "Pashto",
+        "nativeName": "پښتو",
+        "countryCode": "AF",
+        "countryId": "019f34fa-833a-717b-b74b-933bd4315f2f",
+        "emoji": "🇦🇫"
+    },
+    {
+        "code": "fa",
+        "name": "Persian",
+        "nativeName": "فارسی",
+        "countryCode": "IR",
+        "countryId": "019f34fa-83db-73df-a483-1792d8da7811",
+        "emoji": "🇮🇷"
+    },
+    {
+        "code": "pl",
+        "name": "Polish",
+        "nativeName": "Polski",
+        "countryCode": "PL",
+        "countryId": "019f34fa-843e-7358-aee1-81a729082d95",
+        "emoji": "🇵🇱"
+    },
+    {
+        "code": "pt",
+        "name": "Portuguese",
+        "nativeName": "Português",
+        "countryCode": "AO",
+        "countryId": "019f34fa-834a-7089-ba78-7d8ac041ff3b",
+        "emoji": "🇦🇴"
+    },
+    {
+        "code": "qu",
+        "name": "Quechua",
+        "nativeName": "Runa Simi",
+        "countryCode": "PE",
+        "countryId": "019f34fa-843b-7249-a1d1-d0e9b08d83ef",
+        "emoji": "🇵🇪"
+    },
+    {
+        "code": "ro",
+        "name": "Romanian",
+        "nativeName": "Română",
+        "countryCode": "MD",
+        "countryId": "019f34fa-8416-76be-99e4-272e0e16f12b",
+        "emoji": "🇲🇩"
+    },
+    {
+        "code": "rm",
+        "name": "Romansh",
+        "nativeName": "rumantsch grischun",
+        "countryCode": "CH",
+        "countryId": "019f34fa-8470-724d-a10d-ca6543a85623",
+        "emoji": "🇨🇭"
+    },
+    {
+        "code": "ru",
+        "name": "Russian",
+        "nativeName": "Русский",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "sm",
+        "name": "Samoan",
+        "nativeName": "gagana fa'a Samoa",
+        "countryCode": "AS",
+        "countryId": "019f34fa-8344-714b-8a41-9a650d592b33",
+        "emoji": "🇦🇸"
+    },
+    {
+        "code": "sg",
+        "name": "Sango",
+        "nativeName": "yângâ tî sängö",
+        "countryCode": "CF",
+        "countryId": "019f34fa-8389-7359-aa81-5de97eff5a7c",
+        "emoji": "🇨🇫"
+    },
+    {
+        "code": "sa",
+        "name": "Sanskrit",
+        "nativeName": "संस्कृतम्",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "sc",
+        "name": "Sardinian",
+        "nativeName": "sardu",
+        "countryCode": "IT",
+        "countryId": "019f34fa-83e0-77e9-aca4-ecb05802973f",
+        "emoji": "🇮🇹"
+    },
+    {
+        "code": "gd",
+        "name": "Scottish Gaelic",
+        "nativeName": "Gàidhlig",
+        "countryCode": "GB",
+        "countryId": "019f34fa-8487-7756-9064-0c0bc1a3cdf5",
+        "emoji": "🇬🇧"
+    },
+    {
+        "code": "sr",
+        "name": "Serbian",
+        "nativeName": "српски језик",
+        "countryCode": "ME",
+        "countryId": "019f34fa-841a-711e-a20d-231b9090c389",
+        "emoji": "🇲🇪"
+    },
+    {
+        "code": "sn",
+        "name": "Shona",
+        "nativeName": "chiShona",
+        "countryCode": "ZW",
+        "countryId": "019f34fa-8498-7594-a20a-f0603a8c468a",
+        "emoji": "🇿🇼"
+    },
+    {
+        "code": "sd",
+        "name": "Sindhi",
+        "nativeName": "सिन्धी",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "si",
+        "name": "Sinhala",
+        "nativeName": "සිංහල",
+        "countryCode": "LK",
+        "countryId": "019f34fa-8469-765f-a94b-17345feba57e",
+        "emoji": "🇱🇰"
+    },
+    {
+        "code": "sk",
+        "name": "Slovak",
+        "nativeName": "Slovenčina",
+        "countryCode": "SK",
+        "countryId": "019f34fa-845d-77ce-b750-2968c5815e28",
+        "emoji": "🇸🇰"
+    },
+    {
+        "code": "sl",
+        "name": "Slovenian",
+        "nativeName": "slovenščina",
+        "countryCode": "SI",
+        "countryId": "019f34fa-845e-7369-9d50-4b1cfa1ce19e",
+        "emoji": "🇸🇮"
+    },
+    {
+        "code": "so",
+        "name": "Somali",
+        "nativeName": "Soomaaliga",
+        "countryCode": "SO",
+        "countryId": "019f34fa-8461-73ee-bd33-be6a10c96b2b",
+        "emoji": "🇸🇴"
+    },
+    {
+        "code": "nr",
+        "name": "Southern Ndebele",
+        "nativeName": "isiNdebele",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    },
+    {
+        "code": "st",
+        "name": "Southern Sotho",
+        "nativeName": "Sesotho",
+        "countryCode": "LS",
+        "countryId": "019f34fa-83f8-755a-83c0-095612806c4b",
+        "emoji": "🇱🇸"
+    },
+    {
+        "code": "es",
+        "name": "Spanish",
+        "nativeName": "Español",
+        "countryCode": "AR",
+        "countryId": "019f34fa-8352-7312-a424-efb95cb81db7",
+        "emoji": "🇦🇷"
+    },
+    {
+        "code": "su",
+        "name": "Sundanese",
+        "nativeName": "Basa Sunda",
+        "countryCode": "ID",
+        "countryId": "019f34fa-83d9-72ff-982a-5104ecc2acfa",
+        "emoji": "🇮🇩"
+    },
+    {
+        "code": "sw",
+        "name": "Swahili",
+        "nativeName": "Kiswahili",
+        "countryCode": "KE",
+        "countryId": "019f34fa-83ea-72df-a25c-6b56f1af148a",
+        "emoji": "🇰🇪"
+    },
+    {
+        "code": "ss",
+        "name": "Swati",
+        "nativeName": "SiSwati",
+        "countryCode": "SZ",
+        "countryId": "019f34fa-846d-76da-8deb-e288bb39a707",
+        "emoji": "🇸🇿"
+    },
+    {
+        "code": "sv",
+        "name": "Swedish",
+        "nativeName": "Svenska",
+        "countryCode": "SE",
+        "countryId": "019f34fa-846f-77c1-8404-fe82d6325d0c",
+        "emoji": "🇸🇪"
+    },
+    {
+        "code": "tl",
+        "name": "Tagalog",
+        "nativeName": "Wikang Tagalog",
+        "countryCode": "PH",
+        "countryId": "019f34fa-843d-76ec-869f-477cb0e5a4c9",
+        "emoji": "🇵🇭"
+    },
+    {
+        "code": "ty",
+        "name": "Tahitian",
+        "nativeName": "Reo Tahiti",
+        "countryCode": "PF",
+        "countryId": "019f34fa-83bc-76fa-bc62-94ad0e6b410e",
+        "emoji": "🇵🇫"
+    },
+    {
+        "code": "tg",
+        "name": "Tajik",
+        "nativeName": "тоҷикӣ",
+        "countryCode": "TJ",
+        "countryId": "019f34fa-8474-72fc-b55b-20213e3f9d50",
+        "emoji": "🇹🇯"
+    },
+    {
+        "code": "ta",
+        "name": "Tamil",
+        "nativeName": "தமிழ்",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "tt",
+        "name": "Tatar",
+        "nativeName": "татар теле",
+        "countryCode": "RU",
+        "countryId": "019f34fa-8445-752e-8625-4e05d1763a21",
+        "emoji": "🇷🇺"
+    },
+    {
+        "code": "te",
+        "name": "Telugu",
+        "nativeName": "తెలుగు",
+        "countryCode": "IN",
+        "countryId": "019f34fa-83d8-75d6-ac9c-a6b9765f65ce",
+        "emoji": "🇮🇳"
+    },
+    {
+        "code": "th",
+        "name": "Thai",
+        "nativeName": "ไทย",
+        "countryCode": "TH",
+        "countryId": "019f34fa-8477-736b-99ac-c7a998205903",
+        "emoji": "🇹🇭"
+    },
+    {
+        "code": "bo",
+        "name": "Tibetan",
+        "nativeName": "བོད་ཡིག",
+        "countryCode": "CN",
+        "countryId": "019f34fa-838d-734d-a9ea-fbe42716a37b",
+        "emoji": "🇨🇳"
+    },
+    {
+        "code": "ti",
+        "name": "Tigrinya",
+        "nativeName": "ትግርኛ",
+        "countryCode": "ER",
+        "countryId": "019f34fa-83af-72c2-ae4f-b751f5d2fc31",
+        "emoji": "🇪🇷"
+    },
+    {
+        "code": "to",
+        "name": "Tonga",
+        "nativeName": "faka Tonga",
+        "countryCode": "TO",
+        "countryId": "019f34fa-847b-754a-8c84-f7158e985a15",
+        "emoji": "🇹🇴"
+    },
+    {
+        "code": "ts",
+        "name": "Tsonga",
+        "nativeName": "Xitsonga",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    },
+    {
+        "code": "tn",
+        "name": "Tswana",
+        "nativeName": "Setswana",
+        "countryCode": "BW",
+        "countryId": "019f34fa-8375-7446-b956-abd3c71d08f6",
+        "emoji": "🇧🇼"
+    },
+    {
+        "code": "tr",
+        "name": "Turkish",
+        "nativeName": "Türkçe",
+        "countryCode": "CY",
+        "countryId": "019f34fa-839c-7230-b199-2cd1368ae421",
+        "emoji": "🇨🇾"
+    },
+    {
+        "code": "tk",
+        "name": "Turkmen",
+        "nativeName": "Türkmençe",
+        "countryCode": "TM",
+        "countryId": "019f34fa-847f-7591-92c8-41582781c5b6",
+        "emoji": "🇹🇲"
+    },
+    {
+        "code": "tw",
+        "name": "Twi",
+        "nativeName": "Twi",
+        "countryCode": "GH",
+        "countryId": "019f34fa-83c3-71d2-a674-e43026618acb",
+        "emoji": "🇬🇭"
+    },
+    {
+        "code": "uk",
+        "name": "Ukrainian",
+        "nativeName": "Українська",
+        "countryCode": "UA",
+        "countryId": "019f34fa-8484-7118-966b-08698f5b28a7",
+        "emoji": "🇺🇦"
+    },
+    {
+        "code": "ur",
+        "name": "Urdu",
+        "nativeName": "اردو",
+        "countryCode": "PK",
+        "countryId": "019f34fa-8433-774f-bbf7-64cd9637ae36",
+        "emoji": "🇵🇰"
+    },
+    {
+        "code": "ug",
+        "name": "Uyghur",
+        "nativeName": "ئۇيغۇرچە‎",
+        "countryCode": "CN",
+        "countryId": "019f34fa-838d-734d-a9ea-fbe42716a37b",
+        "emoji": "🇨🇳"
+    },
+    {
+        "code": "uz",
+        "name": "Uzbek",
+        "nativeName": "Ўзбек",
+        "countryCode": "UZ",
+        "countryId": "019f34fa-848b-76b8-8b24-a4d90f230064",
+        "emoji": "🇺🇿"
+    },
+    {
+        "code": "ve",
+        "name": "Venda",
+        "nativeName": "Tshivenḓa",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    },
+    {
+        "code": "vi",
+        "name": "Vietnamese",
+        "nativeName": "Tiếng Việt",
+        "countryCode": "VN",
+        "countryId": "019f34fa-8491-772f-9c09-5b534be82d4c",
+        "emoji": "🇻🇳"
+    },
+    {
+        "code": "vo",
+        "name": "Volapük",
+        "nativeName": "Volapük",
+        "countryCode": "VA",
+        "countryId": "019f34fa-848e-760f-91b9-88a9c5cbe7a3",
+        "emoji": "🇻🇦"
+    },
+    {
+        "code": "wa",
+        "name": "Walloon",
+        "nativeName": "walon",
+        "countryCode": "BE",
+        "countryId": "019f34fa-8364-712b-998d-8df1ee6a40b9",
+        "emoji": "🇧🇪"
+    },
+    {
+        "code": "cy",
+        "name": "Welsh",
+        "nativeName": "Cymraeg",
+        "countryCode": "GB",
+        "countryId": "019f34fa-8487-7756-9064-0c0bc1a3cdf5",
+        "emoji": "🇬🇧"
+    },
+    {
+        "code": "fy",
+        "name": "Western Frisian",
+        "nativeName": "Frysk",
+        "countryCode": "NL",
+        "countryId": "019f34fa-8426-7280-a963-7ac0456be4f2",
+        "emoji": "🇳🇱"
+    },
+    {
+        "code": "wo",
+        "name": "Wolof",
+        "nativeName": "Wollof",
+        "countryCode": "SN",
+        "countryId": "019f34fa-8451-73bc-914b-3875688f8409",
+        "emoji": "🇸🇳"
+    },
+    {
+        "code": "xh",
+        "name": "Xhosa",
+        "nativeName": "isiXhosa",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    },
+    {
+        "code": "yi",
+        "name": "Yiddish",
+        "nativeName": "ייִדיש",
+        "countryCode": "IL",
+        "countryId": "019f34fa-83df-7695-bc4a-753f5c2f015f",
+        "emoji": "🇮🇱"
+    },
+    {
+        "code": "yo",
+        "name": "Yoruba",
+        "nativeName": "Yorùbá",
+        "countryCode": "NG",
+        "countryId": "019f34fa-842c-76a5-bad4-75e4422afac7",
+        "emoji": "🇳🇬"
+    },
+    {
+        "code": "za",
+        "name": "Zhuang",
+        "nativeName": "Saɯ cueŋƅ",
+        "countryCode": "CN",
+        "countryId": "019f34fa-838d-734d-a9ea-fbe42716a37b",
+        "emoji": "🇨🇳"
+    },
+    {
+        "code": "zu",
+        "name": "Zulu",
+        "nativeName": "isiZulu",
+        "countryCode": "ZA",
+        "countryId": "019f34fa-8462-71ef-85cf-e6df39badfa1",
+        "emoji": "🇿🇦"
+    }
+]

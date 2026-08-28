@@ -14,7 +14,9 @@ import { RedisModule } from '@/shared/redis/redis.module';
 import { QueueModule } from '@/shared/queue';
 import { StorageModule } from '@/shared/storage';
 import { TelemetryModule } from '@/shared/telemetry';
+
 import { bullConnection } from '@/shared/queue/redis.connection';
+import { CountriesModule } from '@/modules/general/countries/countries.module';
 
 /**
  * Import order is not cosmetic:
@@ -53,6 +55,7 @@ import { bullConnection } from '@/shared/queue/redis.connection';
         AuthApiModule,
         UserModule,
         CacheManagementModule,
+        CountriesModule,
     ],
     controllers: [AppController],
 })

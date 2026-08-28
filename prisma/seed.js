@@ -20,6 +20,7 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 
 /** Import all seeders */
 const { seedAdmin } = require('./seeds/admin.seed');
+const { seedCountries } = require('./seeds/countries.seed');
 /** Seeder Imported */
 
 const connectionString = decodeURIComponent(
@@ -34,7 +35,10 @@ const prisma = new PrismaClient({ adapter });
 
 // Order matters — each entry lists the registry names it depends on. Keep this array in a
 // valid topological order.
-const registry = [{ name: 'admin', deps: [], run: async (prisma) => await seedAdmin(prisma) }];
+const registry = [
+    { name: 'admin', deps: [], run: async (prisma) => await seedAdmin(prisma) },
+    { name: 'countries', deps: [], run: async (prisma) => await seedCountries(prisma) },
+];
 
 function parseFileFlag(argv) {
     for (let i = 0; i < argv.length; i++) {
@@ -86,16 +90,7 @@ async function report(prisma) {
     const counts = {
         user: await prisma.user.count(),
         admin: await prisma.user.count({ where: { role: 'ADMIN' } }),
-        levelPack: await prisma.levelPack.count(),
-        chapter: await prisma.chapter.count(),
-        level: await prisma.level.count(),
-        difficultyPreset: await prisma.difficultyPreset.count(),
-        powerDefinition: await prisma.powerDefinition.count(),
-        shopItem: await prisma.shopItem.count(),
-        questDefinition: await prisma.questDefinition.count(),
-        gridPack: await prisma.gridPack.count(),
-        gridPuzzle: await prisma.gridPuzzle.count(),
-        gridWord: await prisma.gridWord.count(),
+        country: await prisma.country.count(),
     };
     console.log('counts:', JSON.stringify(counts));
 }

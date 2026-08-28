@@ -80,14 +80,14 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
-  issuer                String
-  accountId             String
-  providerId            String
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  
+  id           String  @id
+  issuer       String
+  accountId    String
+  providerId   String
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   /// Granted OAuth scopes. Load-bearing for the Gmail integration: sign-in asks only for
@@ -133,8 +133,8 @@ model Verification {
 model UserMeta {
   id String @id @db.Uuid
 
-  theme  Theme   @default(SYSTEM)
-  locale String? @default("en")
+  theme    Theme   @default(SYSTEM)
+  locale   String? @default("en")
   /// IANA timezone. The one time value the server stores rather than leaving to the client,
   /// because backup schedules and notification delivery windows are computed server-side.
   timezone String?
@@ -152,6 +152,9 @@ model UserMeta {
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  countryId String?  @db.Uuid
+  country   Country? @relation(fields: [countryId], references: [id], onDelete: Cascade)
 
   @@map("user_meta")
 }
@@ -192,10 +195,10 @@ model File {
   status FileStatus @default(PENDING)
 
   /// Full object key including the app prefix, e.g. `base-app/users/<userId>/uploads/<uuid>.pdf`.
-  storageKey   String  @unique
-  originalName String
-  mimeType     String
-  sizeBytes    Int
+  storageKey     String  @unique
+  originalName   String
+  mimeType       String
+  sizeBytes      Int
   /// Computed at `complete` from the stored object, not from the client. Enables dedupe of
   /// a CV re-uploaded unchanged, and is the only thing that proves the object we verified is
   /// the object we later read.
@@ -347,4 +350,41 @@ model ModelCall {
   @@index([createdAt])
   @@index([subjectId])
   @@map("model_calls")
+}
+
+model Country {
+  id        String  @id @default(uuid(7)) @db.Uuid
+  capital   String? @db.VarChar(255)
+  code      String? @unique
+  dialCode  String? @db.VarChar(255)
+  continent String? @db.VarChar(255)
+  flag      String? @db.Text
+  largeFlag String? @db.Text
+
+  title    String? @db.VarChar(255)
+  isActive Boolean @default(true)
+  unicode  String? @db.VarChar(255)
+  emoji    String? @db.VarChar(255)
+
+  currency       String? @db.VarChar(255)
+  currencySymbol String? @db.VarChar(255)
+  currencyName   String? @db.VarChar(255)
+  timezone       String? @db.VarChar(255)
+
+  name         Json?
+  timezones    String[] @default([])
+  languages    Json[]   @default([])
+  currencies   Json?
+  nativeNames  Json[]   @default([])
+  currencyData Json[]   @default([])
+
+  createdAt DateTime   @default(now())
+  usersMeta UserMeta[]
+
+  @@index([code])
+  @@index([isActive])
+  @@index([dialCode])
+  @@index([capital])
+  @@index([createdAt])
+  @@map("countries")
 }
